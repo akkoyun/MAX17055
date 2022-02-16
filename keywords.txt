@@ -1,82 +1,62 @@
 #######################################
-# Syntax Coloring Map For MAX78630
+# Syntax Coloring Map For MAX17055
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-Energy_Analayser               KEYWORD1
+MAX17055						KEYWORD1
+Battery							KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-Begin                          KEYWORD2
-Get_Baud                       KEYWORD2
-Set_Baud                       KEYWORD2
-Get_Device_Address             KEYWORD2
-Get_System_Stat                KEYWORD2
-VScale                         KEYWORD2
-IScale                         KEYWORD2
-Harmonic                       KEYWORD2
-Set_Bucket                     KEYWORD2
-Get_Bucket_LOW                 KEYWORD2
-Get_Bucket_HIGH                KEYWORD2
-Set_Limit                      KEYWORD2
-Get_Limit                      KEYWORD2
-Get_Frame                      KEYWORD2
-Get_Cycle                      KEYWORD2
-Get_Divisor                    KEYWORD2
-Get_Samples                    KEYWORD2
-Get_Voltage_Gain               KEYWORD2
-Get_Voltage_Offset             KEYWORD2
-Get_Voltage_RMS_Offset         KEYWORD2
-Get_Current_Gain               KEYWORD2
-Get_Current_Offset             KEYWORD2
-Get_Temperature_Gain           KEYWORD2
-Get_Temperature_Offset         KEYWORD2
-Get_Active_Power_Offset        KEYWORD2
-Get_ReActive_Power_Offset      KEYWORD2
-Get_Voltage_HPF_COEF           KEYWORD2
-Get_Current_HPF_COEF           KEYWORD2
-IC_Temperature                 KEYWORD2
-Firmware                       KEYWORD2
-Voltage_RMS                    KEYWORD2
-Voltage_Instantaneous          KEYWORD2
-Voltage_Fundamental            KEYWORD2
-Voltage_Harmonic               KEYWORD2
-Voltage_SAG_Limit              KEYWORD2
-Frequency                      KEYWORD2
-Phase_Compansation             KEYWORD2
-Current_RMS                    KEYWORD2
-Current_Instantaneous          KEYWORD2
-Current_Peak                   KEYWORD2
-Current_Fundamental            KEYWORD2
-Current_Harmonic               KEYWORD2
-Active_Power                   KEYWORD2
-ReActive_Power                 KEYWORD2
-Apparent_Power                 KEYWORD2
-Fundamental_Power              KEYWORD2
-Harmonic_Power                 KEYWORD2
-Power_Factor                   KEYWORD2
-Fundamental_ReActive_Power     KEYWORD2
-Harmonic_ReActive_Power        KEYWORD2
-Fundamental_VA_Power           KEYWORD2
-Active_Energy_Recieved         KEYWORD2
-Active_Energy_Delivered        KEYWORD2
-ReActive_Energy_Recieved       KEYWORD2
-ReActive_Energy_Delivered      KEYWORD2
-Set_Min_Max_Address            KEYWORD2
-Get_Min_Value                  KEYWORD2
-Get_Max_Value                  KEYWORD2
-Control_Limits                 KEYWORD2
-Control_Clear                  KEYWORD2
+Begin							KEYWORD2
+Serial_ID						KEYWORD2
+Set_dQAcc						KEYWORD2
+Set_dPAcc						KEYWORD2
+Set_ModelCfg					KEYWORD2
+Set_HibCFG			        	KEYWORD2
+Set_Config						KEYWORD2
+Instant_Voltage					KEYWORD2
+Average_Voltage					KEYWORD2
+Empty_Voltage					KEYWORD2
+Recovery_Voltage				KEYWORD2
+Set_Empty_Recovery_Voltage		KEYWORD2
+Set_Max_Min_Voltage				KEYWORD2
+Instant_Current					KEYWORD2
+Average_Current					KEYWORD2
+Charge_Termination_Current		KEYWORD2
+Set_Charge_Termination_Current	KEYWORD2
+State_Of_Charge					KEYWORD2
+Average_State_Of_Charge			KEYWORD2
+Instant_Capacity				KEYWORD2
+Design_Capacity					KEYWORD2
+Full_Capacity					KEYWORD2
+Set_Design_Capacity				KEYWORD2
+Temperature						KEYWORD2
+Time_To_Empty					KEYWORD2
+Time_To_Full					KEYWORD2
+Battery_Age						KEYWORD2
+Charge_Cycle					KEYWORD2
+is_Power_on_Reset				KEYWORD2
+is_Min_Current					KEYWORD2
+is_Max_Current					KEYWORD2
+is_Min_Voltage					KEYWORD2
+is_Max_Voltage					KEYWORD2
+is_Min_Temperature				KEYWORD2
+is_Max_Temperature				KEYWORD2
+is_Min_SOC						KEYWORD2
+is_Max_SOC						KEYWORD2
+is_Battery_Present				KEYWORD2
+is_SOC_Change					KEYWORD2
+is_Battery_Insertion			KEYWORD2
+is_Battery_Removal				KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
 
-_VScale                        LITERAL1
-_IScale                        LITERAL1
-Limit                          LITERAL1
+MAX17055_Version                LITERAL1

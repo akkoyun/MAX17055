@@ -1,0 +1,26 @@
+language: c
+sudo: false
+cache:
+  directories:
+    - ~/arduino_ide
+    - ~/.arduino15/packages/
+git:
+  depth: false
+  quiet: true
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-trusty-5.0
+      - key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+    packages:
+      - python3-pip
+      - python3-wheel
+env:
+  global:
+     - PRETTYNAME="MAX17055 Battery Gauge"
+
+before_install:
+   - source <(curl -SLs https://raw.githubusercontent.com/akkoyun/MAX17055/install.sh)
+
+script:
+   - build_main_platforms

@@ -1,8 +1,8 @@
 {
-	"name": "MAX78630 Polyphase Energy Meter",
-	"version": "4.0.11",
-	"keywords": "MAX78630, Maxim, Silergy, Energy, Electric, Poly, Phase, Metering, Measure, Active, Reactive, Apparent, Voltage, Current, Power Factor, Cos Fi, Temperature, Fundamental, Harmonic, Defect, Alarm, Min, Max",
-	"description": "The EnergyBoard is an energy measurement module for polyphase power-monitoring systems. It is designed for real-time monitoring for a variety of typical three-phase configurations in industrial applications. The EnergyBoard provides up to six analog inputs for interfacing to voltage and current sensors. Scaled voltages from the sensors are fed to the single converter front-end using a high-resolution delta-sigma converter. Supported current sensors include current transformers (CTs), Rogowski coils, and resistive shunts.",
+	"name": "MAX17055",
+	"version": "2.0.0",
+	"keywords": "Battery, Gauge, MAX17055, Voltage, Current, Age, Cycle, BMS, SOC, Fuel, Capacity, mAh",
+	"description": "The MAX17055 is a low-power fuel-gauge IC that implements the Maxim ModelGauge m5 EZ algorithm. It measures battery voltage, current and temperature to produce fuel gauge results. Its typical power consumption is 7μA.",
 	"authors":
 	{
 		"name": "Mehmet Gunce Akkoyun",
@@ -11,7 +11,7 @@
 	},
 	"license": "MIT",
 	"frameworks": "arduino",
-	"headers": "MAX78630.h",
+	"headers": "MAX17055.h",
 	"platforms":
 	[
 		"atmelavr",
@@ -20,17 +20,15 @@
 	"repository":
 	{
 		"type": "git",
-		"url": "https://github.com/akkoyun/MAX78630.git"
+		"url": "https://github.com/akkoyun/MAX17055.git"
 	},
 	"examples": [
 		{
-			"name": "test",
-			"base": "examples/test",
+			"name": "Battery",
+			"base": "examples/Battery",
 			"files": [
-				"test.ino"
+				"Battery.ino"
 			]
 		}
 	]
 }
-
-
