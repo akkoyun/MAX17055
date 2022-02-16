@@ -2,8 +2,8 @@
 
 # we need bash 4 for associative arrays
 if [ "${BASH_VERSION%%[^0-9]*}" -lt "4" ]; then
-  echo "BASH VERSION < 4: ${BASH_VERSION}" >&2
-  exit 1
+	echo "BASH VERSION < 4: ${BASH_VERSION}" >&2
+	exit 1
 fi
 
 # associative array for the platforms that will be verified in build_main_platforms()
@@ -18,6 +18,7 @@ export DISPLAY=:1.0
 
 #This condition is to avoid reruning install when build argument is passed
 if [[ $# -eq 0 ]] ; then
+
 # define colors
 GRAY='\033[1;30m';
 RED='\033[0;31m';
@@ -42,34 +43,34 @@ echo "########################################################################";
 
 # if .travis.yml does not set version
 if [ -z $ARDUINO_IDE_VERSION ]; then
-export ARDUINO_IDE_VERSION="1.8.11"
-echo "NOTE: YOUR .TRAVIS.YML DOES NOT SPECIFY ARDUINO IDE VERSION, USING $ARDUINO_IDE_VERSION"
+	export ARDUINO_IDE_VERSION="1.8.11"
+	echo "NOTE: YOUR .TRAVIS.YML DOES NOT SPECIFY ARDUINO IDE VERSION, USING $ARDUINO_IDE_VERSION"
 fi
 
 # if newer version is requested
 if [ ! -f $HOME/arduino_ide/$ARDUINO_IDE_VERSION ] && [ -f $HOME/arduino_ide/arduino ]; then
-echo -n "DIFFERENT VERSION OF ARDUINO IDE REQUESTED: "
-shopt -s extglob
-cd $HOME/arduino_ide/
-rm -rf *
-if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
-cd $OLDPWD
+	echo -n "DIFFERENT VERSION OF ARDUINO IDE REQUESTED: "
+	shopt -s extglob
+	cd $HOME/arduino_ide/
+	rm -rf *
+	if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
+	cd $OLDPWD
 fi
 
 # if not already cached, download and install arduino IDE
 echo -n "ARDUINO IDE STATUS: "
 if [ ! -f $HOME/arduino_ide/arduino ]; then
-echo -n "DOWNLOADING: "
-wget --quiet https://downloads.arduino.cc/arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
-if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
-echo -n "UNPACKING ARDUINO IDE: "
-[ ! -d $HOME/arduino_ide/ ] && mkdir $HOME/arduino_ide
-tar xf arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz -C $HOME/arduino_ide/ --strip-components=1
-if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
-touch $HOME/arduino_ide/$ARDUINO_IDE_VERSION
+	echo -n "DOWNLOADING: "
+	wget --quiet https://downloads.arduino.cc/arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
+	if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
+	echo -n "UNPACKING ARDUINO IDE: "
+	[ ! -d $HOME/arduino_ide/ ] && mkdir $HOME/arduino_ide
+	tar xf arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz -C $HOME/arduino_ide/ --strip-components=1
+	if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
+	touch $HOME/arduino_ide/$ARDUINO_IDE_VERSION
 else
-echo -n "CACHED: "
-echo -e """$GREEN""\xe2\x9c\x93"
+	echo -n "CACHED: "
+	echo -e """$GREEN""\xe2\x9c\x93"
 fi
 
 # define output directory for .hex files
@@ -103,13 +104,15 @@ fi
 # install dependancy libraries in library.properties
 grep "depends=" $HOME/arduino_ide/libraries/MAX17055/library.properties | sed 's/depends=//' | sed -n 1'p' |  tr ',' '\n' | while read word; do arduino --install-library "$word"; done
 
-
-
-
 # install random lib so the arduino IDE grabs a new library index
 # see: https://github.com/arduino/Arduino/issues/3535
 echo -n "UPDATE LIBRARY INDEX: "
 DEPENDENCY_OUTPUT=$(arduino --install-library USBHost > /dev/null 2>&1)
+if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
+
+
+echo -n "Install I2C_Functions Library: "
+DEPENDENCY_OUTPUT=$(arduino --install-library I2C_Functions > /dev/null 2>&1)
 if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
 
 
