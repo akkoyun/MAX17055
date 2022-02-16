@@ -86,10 +86,6 @@ echo -e "\n#####################################################################
 echo -e "${YELLOW}INSTALLING DEPENDENCIES"
 echo "########################################################################";
 
-echo -n "Install I2C_Functions Library: "
-DEPENDENCY_OUTPUT=$(arduino --install-library Statistical)
-if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
-
 # install the zero, esp8266, and adafruit board packages
 echo -n "ADD PACKAGE INDEX: "
 DEPENDENCY_OUTPUT=$(arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json,http://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espressif.com/dl/package_esp32_index.json" --save-prefs 2>&1)
@@ -110,8 +106,8 @@ grep "depends=" $HOME/arduino_ide/libraries/MAX17055/library.properties | sed 's
 
 # install random lib so the arduino IDE grabs a new library index
 # see: https://github.com/arduino/Arduino/issues/3535
-echo -n "UPDATE LIBRARY INDEX: "
-DEPENDENCY_OUTPUT=$(arduino --install-library USBHost > /dev/null 2>&1)
+echo -n "UPDATE LIBRARY (statistical) INDEX: "
+DEPENDENCY_OUTPUT=$(arduino --install-library Statistical 2>&1)
 if [ $? -ne 0 ]; then echo -e """$RED""\xe2\x9c\x96"; else echo -e """$GREEN""\xe2\x9c\x93"; fi
 
 
