@@ -76,7 +76,7 @@ fi
 export ARDUINO_HEX_DIR=arduino_build_$TRAVIS_BUILD_NUMBER
 
 # link test library folder to the arduino libraries folder
-ln -s $TRAVIS_BUILD_DIR $HOME/arduino_ide/libraries/B100AA
+ln -s $TRAVIS_BUILD_DIR $HOME/arduino_ide/libraries/MAX17055
 
 # add the arduino CLI to our PATH
 export PATH="$HOME/arduino_ide:$PATH"
@@ -747,7 +747,7 @@ if [[ ! $# -eq 0 ]] ; then
 export ARDUINO_HEX_DIR=arduino_build_$TRAVIS_BUILD_NUMBER
 
 # link test library folder to the arduino libraries folder
-ln -s $TRAVIS_BUILD_DIR $HOME/arduino_ide/libraries/B100AA
+ln -s $TRAVIS_BUILD_DIR $HOME/arduino_ide/libraries/MAX17055
 
 # add the arduino CLI to our PATH
 export PATH="$HOME/arduino_ide:$PATH"
