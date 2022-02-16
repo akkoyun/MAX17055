@@ -20,7 +20,7 @@ env:
      - PRETTYNAME="MAX17055 Battery Gauge"
 
 before_install:
-   - source <(curl -SLs https://raw.githubusercontent.com/akkoyun/MAX17055/install.sh)
+   - source <(curl -SLs https://raw.githubusercontent.com/akkoyun/MAX17055/02.00.00/install.sh)
 
 script:
    - build_main_platforms
