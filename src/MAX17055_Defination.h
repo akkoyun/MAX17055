@@ -112,7 +112,7 @@
 #define Register_AtAvSOC		0xDE
 #define Register_AtAvCap		0xDF
 
-enum STATUS_Bits {
+enum STAT_Bits {
 	POR			= 1,
 	Imn			= 2,
 	Bst			= 3,
