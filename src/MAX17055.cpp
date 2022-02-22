@@ -723,7 +723,7 @@ bool MAX17055::is_Power_on_Reset(void) {
 	bool _Result = I2C.Read_Register_Bit(I2C_Address, Register_Status, POR);
 
 	// Reset Bit
-	I2C.Clear_Register_Bit(I2C_Address, Register_Status, POR);
+	I2C.Clear_Register_Bit(I2C_Address, Register_Status, POR, false);
 
 	// End Function
 	return(_Result);
