@@ -3,7 +3,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/akkoyun/MAX17055) ![arduino-library-badge](https://www.ardu-badge.com/badge/MAX17055.svg?) ![Visits Badge](https://badges.pufler.dev/visits/akkoyun/MAX17055) ![GitHub stars](https://img.shields.io/github/stars/akkoyun/MAX17055?style=flat&logo=github) ![Updated Badge](https://badges.pufler.dev/updated/akkoyun/MAX17055) [![PlatformIO Registry](https://badges.registry.platformio.org/packages/akkoyun/library/MAX17055.svg)](https://registry.platformio.org/libraries/akkoyun/MAX17055)
 [![Check Arduino](https://github.com/akkoyun/MAX17055/actions/workflows/check-arduino.yml/badge.svg)](https://github.com/akkoyun/MAX17055/actions/workflows/check-arduino.yml) [![Compile Examples](https://github.com/akkoyun/MAX17055/actions/workflows/compile-examples.yml/badge.svg)](https://github.com/akkoyun/MAX17055/actions/workflows/compile-examples.yml) [![Spell Check](https://github.com/akkoyun/MAX17055/actions/workflows/spell-check.yml/badge.svg)](https://github.com/akkoyun/MAX17055/actions/workflows/spell-check.yml)
 
-	Battery Gauge Sensor - 02.01.00
+	Battery Gauge Sensor - 02.01.01
 
 ---
 
