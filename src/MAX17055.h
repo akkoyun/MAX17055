@@ -1,7 +1,6 @@
 /* *******************************************************************************
  *  Copyright (C) 2014-2019 Mehmet Gunce Akkoyun Can not be copied and/or
  *	distributed without the express permission of Mehmet Gunce Akkoyun
- *	This library is a combined book of enviroment sensor library.
  *
  *	Library				: Battery Management Library
  *	Code Developer		: Mehmet Gunce Akkoyun (akkoyun@me.com)
@@ -30,7 +29,7 @@ class MAX17055 {
 	public:
 
 		// Function Variables
-		char MAX17055_Version[9] = "02.01.00";
+		char MAX17055_Version[9] = "02.01.01";
 		
 		// Public Functions
 		bool Begin(uint16_t _Design_Capacity, float _Resistor);
@@ -101,7 +100,7 @@ class MAX17055 {
 		// Sense Resistor Variable
 		float _Sense_Resistor;
 
-		// I2C Register Definations
+		// I2C Register Definitions
 		enum MAX17055_Registers {
 			Register_Status			= (uint8_t)0x00,
 			Register_VAlrtTh		= (uint8_t)0x01,
@@ -196,7 +195,7 @@ class MAX17055 {
 			Register_AtAvCap		= (uint8_t)0xDF
 		};
 
-		// Status Register Bit Definations
+		// Status Register Bit Definitions
 		enum STATUS_Register_Bits {
 			POR			= 1,
 			Imn			= 2,

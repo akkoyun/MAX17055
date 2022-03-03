@@ -1,7 +1,6 @@
 /* *******************************************************************************
  *  Copyright (C) 2014-2019 Mehmet Gunce Akkoyun Can not be copied and/or
  *	distributed without the express permission of Mehmet Gunce Akkoyun
- *	This library is a combined book of enviroment sensor library.
  *
  *	Library				: Battery Management Library
  *	Code Developer		: Mehmet Gunce Akkoyun (akkoyun@me.com)
