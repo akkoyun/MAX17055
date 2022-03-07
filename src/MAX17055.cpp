@@ -59,7 +59,7 @@ float MAX17055::Instant_Voltage(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_VCell, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_VCell__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -95,7 +95,7 @@ float MAX17055::Average_Voltage(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_AvgVCell, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_AvgVCell__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -131,7 +131,7 @@ float MAX17055::Empty_Voltage(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_VEmpty, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_VEmpty__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -168,7 +168,7 @@ float MAX17055::Recovery_Voltage(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_VEmpty, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_VEmpty__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -206,7 +206,7 @@ bool MAX17055::Set_Empty_Recovery_Voltage(float _Empty_Voltage, float _Recovery_
 	_Data[1] = ((_Raw_Voltage & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_VEmpty, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_VEmpty__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -232,7 +232,7 @@ bool MAX17055::Set_Max_Min_Voltage(float _Max_Voltage, float _Min_Voltage) {
 	_Data[1] = ((_Raw_Voltage & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_VEmpty, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_VEmpty__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -259,7 +259,7 @@ float MAX17055::Instant_Current(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_Current, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_Current__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -307,7 +307,7 @@ float MAX17055::Average_Current(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_AvgCurrent, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_AvgCurrent__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -355,7 +355,7 @@ float MAX17055::Charge_Termination_Current(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_IChgTerm, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_IChgTerm__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -385,7 +385,7 @@ bool MAX17055::Set_Charge_Termination_Current(void) {
 	_Data[1] = ((_Raw_Termination_Voltage & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_IChgTerm, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_IChgTerm__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -412,7 +412,7 @@ float MAX17055::State_Of_Charge(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_RepSOC, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_RepSOC__, MAX17055_Data, 2, false);
 
 		// Calculate Measurement
 		_Measurement_Array[_Read_ID] = ((double)MAX17055_Data[1] + (double)MAX17055_Data[0] / 256);
@@ -445,7 +445,7 @@ float MAX17055::Average_State_Of_Charge(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_AvSOC, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_AvSOC__, MAX17055_Data, 2, false);
 
 		// Calculate Measurement
 		_Measurement_Array[_Read_ID] = ((double)MAX17055_Data[1] + (double)MAX17055_Data[0] / 256);
@@ -467,7 +467,7 @@ uint16_t MAX17055::Instant_Capacity(void) {
 	uint8_t MAX17055_Data[2];
 
 	// Get Data from IC
-	I2C.Read_Multiple_Register(_I2C_Address, Register_RepCap, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_RepCap__, MAX17055_Data, 2, false);
 
 	// Combine Read Bytes
 	uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -485,7 +485,7 @@ uint16_t MAX17055::Design_Capacity(void) {
 	uint8_t MAX17055_Data[2];
 
 	// Get Data from IC
-	I2C.Read_Multiple_Register(_I2C_Address, Register_DesignCap, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_DesignCap__, MAX17055_Data, 2, false);
 
 	// Combine Read Bytes
 	uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -503,7 +503,7 @@ uint16_t MAX17055::Full_Capacity(void) {
 	uint8_t MAX17055_Data[2];
 
 	// Get Data from IC
-	I2C.Read_Multiple_Register(_I2C_Address, Register_FullCap, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_FullCap__, MAX17055_Data, 2, false);
 
 	// Combine Read Bytes
 	uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -528,7 +528,7 @@ bool MAX17055::Set_Design_Capacity(uint16_t _Capacity) {
 	_Data[1] = ((_Raw_Cap & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_DesignCap, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_DesignCap__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -555,7 +555,7 @@ float MAX17055::Temperature(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_Temp, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_Temp__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -608,7 +608,7 @@ uint16_t MAX17055::Time_To_Empty(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_TTE, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_TTE__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -644,7 +644,7 @@ uint16_t MAX17055::Time_To_Full(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_TTF, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_TTF__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -669,7 +669,7 @@ uint16_t MAX17055::Battery_Age(void) {
 	uint8_t MAX17055_Data[2];
 
 	// Get Data from IC
-	I2C.Read_Multiple_Register(_I2C_Address, Register_Age, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_Age__, MAX17055_Data, 2, false);
 
 	// Combine Read Bytes
 	uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -697,7 +697,7 @@ uint16_t MAX17055::Charge_Cycle(void) {
 		uint8_t MAX17055_Data[2];
 
 		// Get Data from IC
-		I2C.Read_Multiple_Register(_I2C_Address, Register_Cycles, MAX17055_Data, 2, false);
+		I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_Cycles__, MAX17055_Data, 2, false);
 
 		// Combine Read Bytes
 		uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
@@ -719,10 +719,10 @@ uint16_t MAX17055::Charge_Cycle(void) {
 bool MAX17055::is_Power_on_Reset(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, POR);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_POR__);
 
 	// Reset Bit
-	I2C.Clear_Register_Bit(_I2C_Address, Register_Status, POR, false);
+	I2C.Clear_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_POR__, false);
 
 	// End Function
 	return(_Result);
@@ -731,7 +731,7 @@ bool MAX17055::is_Power_on_Reset(void) {
 bool MAX17055::is_Min_Current(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Imn);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Imn__);
 
 	// End Function
 	return(_Result);
@@ -740,7 +740,7 @@ bool MAX17055::is_Min_Current(void) {
 bool MAX17055::is_Max_Current(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Imx);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Imx__);
 
 	// End Function
 	return(_Result);
@@ -749,7 +749,7 @@ bool MAX17055::is_Max_Current(void) {
 bool MAX17055::is_Min_Voltage(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Vmn);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Vmn__);
 
 	// End Function
 	return(_Result);
@@ -758,7 +758,7 @@ bool MAX17055::is_Min_Voltage(void) {
 bool MAX17055::is_Max_Voltage(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Vmx);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Vmx__);
 
 	// End Function
 	return(_Result);
@@ -767,7 +767,7 @@ bool MAX17055::is_Max_Voltage(void) {
 bool MAX17055::is_Min_Temperature(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Tmn);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Tmn__);
 
 	// End Function
 	return(_Result);
@@ -776,7 +776,7 @@ bool MAX17055::is_Min_Temperature(void) {
 bool MAX17055::is_Max_Temperature(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Tmx);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Tmx__);
 
 	// End Function
 	return(_Result);
@@ -785,7 +785,7 @@ bool MAX17055::is_Max_Temperature(void) {
 bool MAX17055::is_Min_SOC(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Smn);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Smn__);
 
 	// End Function
 	return(_Result);
@@ -794,7 +794,7 @@ bool MAX17055::is_Min_SOC(void) {
 bool MAX17055::is_Max_SOC(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Smx);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Smx__);
 
 	// End Function
 	return(_Result);
@@ -803,7 +803,7 @@ bool MAX17055::is_Max_SOC(void) {
 bool MAX17055::is_Battery_Present(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Bst);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Bst__);
 
 	// End Function
 	return(_Result);
@@ -812,7 +812,7 @@ bool MAX17055::is_Battery_Present(void) {
 bool MAX17055::is_SOC_Change(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, dSOCi);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_dSOCi__);
 
 	// End Function
 	return(_Result);
@@ -821,7 +821,7 @@ bool MAX17055::is_SOC_Change(void) {
 bool MAX17055::is_Battery_Insertion(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Bi);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Bi__);
 
 	// End Function
 	return(_Result);
@@ -830,7 +830,7 @@ bool MAX17055::is_Battery_Insertion(void) {
 bool MAX17055::is_Battery_Removal(void) {
 	
 	// Get Status Bit
-	bool _Result = I2C.Read_Register_Bit(_I2C_Address, Register_Status, Br);
+	bool _Result = I2C.Read_Register_Bit(I2C.MAX17055.I2C_Address, __MAX17055_Status__, __MAX17055_Br__);
 
 	// End Function
 	return(_Result);
@@ -851,7 +851,7 @@ bool MAX17055::Set_dQAcc(uint16_t _Capacity) {
 	_Data[1] = ((_Capacity & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_dQAcc, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_dQAcc__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -863,7 +863,7 @@ bool MAX17055::Set_dPAcc(uint16_t _Capacity) {
 	uint8_t _dQAcc[2];
 
 	// Get dQAcc Register
-	I2C.Read_Multiple_Register(_I2C_Address, Register_dQAcc, _dQAcc, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_dQAcc__, _dQAcc, 2, false);
 
 	// Combine Read Bytes
 	uint16_t dQAcc = ((uint16_t)_dQAcc[1] << 8) | (uint16_t)_dQAcc[0];
@@ -879,7 +879,7 @@ bool MAX17055::Set_dPAcc(uint16_t _Capacity) {
 	_Data[1] = ((dPAcc & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_dPAcc, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_dPAcc__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -922,7 +922,7 @@ bool MAX17055::Set_ModelCfg(uint8_t _Model_ID, bool _VChg) {
 	_Data[1] = ((_Data_Set & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_ModelCfg, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_ModelCfg__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -938,7 +938,7 @@ bool MAX17055::Set_HibCFG(uint16_t _Config) {
 	_Data[1] = ((_Config & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
-	bool _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_HibCfg, _Data, 2);
+	bool _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_HibCfg__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -957,8 +957,8 @@ bool MAX17055::Set_Config(uint8_t _Channel, uint16_t _Config) {
 	_Data[1] = ((_Config & (uint16_t)0xFF00) >> 8);
 
 	// Config1 Setting
-	if (_Channel == 1) _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_Config, _Data, 2);
-	if (_Channel == 2) _Result = I2C.Write_Multiple_Register(_I2C_Address, Register_Config2, _Data, 2);
+	if (_Channel == 1) _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_Config__, _Data, 2);
+	if (_Channel == 2) _Result = I2C.Write_Multiple_Register(I2C.MAX17055.I2C_Address, __MAX17055_Config2__, _Data, 2);
 
 	// End Function
 	return(_Result);
@@ -976,42 +976,42 @@ String MAX17055::Serial_ID(void) {
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xDF, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xDF, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_7 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xDE, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xDE, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_6 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xDD, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xDD, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_5 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xDC, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xDC, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_4 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xDA, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xDA, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_3 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xD9, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xD9, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_2 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xD5, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xD5, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_1 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Get Data from IC
 	memset(MAX17055_Data, '\0', 2);
-	I2C.Read_Multiple_Register(_I2C_Address, 0xD4, MAX17055_Data, 2, false);
+	I2C.Read_Multiple_Register(I2C.MAX17055.I2C_Address, 0xD4, MAX17055_Data, 2, false);
 	uint16_t Measurement_WORD_0 = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
 	// Combine Variable 7
