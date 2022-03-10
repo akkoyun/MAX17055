@@ -28,9 +28,6 @@ class MAX17055 {
 
 	public:
 
-		// Function Variables
-		char MAX17055_Version[9] = "02.01.02";
-		
 		// Public Functions
 		bool Begin(uint16_t _Design_Capacity, float _Resistor);
 		String Serial_ID(void);
