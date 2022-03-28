@@ -6,7 +6,7 @@ void setup() {
 	Serial.begin(115200);
 
 	// Set Multiplexer
-	I2C.Set_Multiplexer(__ADDR_TCA9548__ ,__CH4__);
+	I2C.Set_Multiplexer(__I2C__TCA9548__Addr__ ,__CH4__);
 
 	// Start Battery Gauge
 	Battery.Begin(2000, 0.01);
