@@ -30,14 +30,6 @@ class MAX17055 {
 
 		// Public Functions
 		bool Begin(uint16_t _Design_Capacity, float _Resistor);
-		String Serial_ID(void);
-
-		// Config Functions
-		bool Set_dQAcc(uint16_t _Capacity);
-		bool Set_dPAcc(uint16_t _Capacity);
-		bool Set_ModelCfg(uint8_t _Model_ID, bool _VChg);
-		bool Set_HibCFG(uint16_t _Config);
-		bool Set_Config(uint8_t _Channel, uint16_t _Config);
 
 		// Voltage Functions
 		float Instant_Voltage(void);
@@ -90,6 +82,15 @@ class MAX17055 {
 		bool is_Battery_Removal(void);
 
 	private:
+
+		// Config Functions
+		bool Set_dQAcc(uint16_t _Capacity);
+		bool Set_dPAcc(uint16_t _Capacity);
+		bool Set_ModelCfg(uint8_t _Model_ID, bool _VChg);
+		bool Set_HibCFG(uint16_t _Config);
+		bool Set_Config(uint8_t _Channel, uint16_t _Config);
+
+		String Serial_ID(void);
 
 		// Sense Resistor Variable
 		float _Sense_Resistor;
