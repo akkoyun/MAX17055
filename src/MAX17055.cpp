@@ -9,7 +9,7 @@
 #include "MAX17055.h"
 
 // Configuration Functions
-bool MAX17055::Begin(uint16_t _Design_Capacity, float _Resistor) {
+bool MAX17055::Begin(const uint16_t _Design_Capacity, const float _Resistor) {
 
 	// Set Configuration
 	Set_Config(1, 0x0000);
@@ -186,7 +186,7 @@ float MAX17055::Recovery_Voltage(void) {
 	return(_Average);
 
 }
-bool MAX17055::Set_Empty_Recovery_Voltage(float _Empty_Voltage, float _Recovery_Voltage) {
+bool MAX17055::Set_Empty_Recovery_Voltage(const float _Empty_Voltage, const float _Recovery_Voltage) {
 
 	// Set Empty Raw
 	uint32_t _Raw_Empty_Voltage = (uint32_t(_Empty_Voltage * 1000) / 10);
@@ -212,7 +212,7 @@ bool MAX17055::Set_Empty_Recovery_Voltage(float _Empty_Voltage, float _Recovery_
 	return(_Result);
 
 }
-bool MAX17055::Set_Max_Min_Voltage(float _Max_Voltage, float _Min_Voltage) {
+bool MAX17055::Set_Max_Min_Voltage(const float _Max_Voltage, const float _Min_Voltage) {
 
 	// Set Empty Raw
 	uint32_t _Raw_Max_Voltage = ((uint32_t)_Max_Voltage * 1000) / 20;
@@ -515,7 +515,7 @@ uint16_t MAX17055::Full_Capacity(void) {
 	return(_Measurement);
 
 }
-bool MAX17055::Set_Design_Capacity(uint16_t _Capacity) {
+bool MAX17055::Set_Design_Capacity(const uint16_t _Capacity) {
 
 	// Set Raw
 	uint16_t _Raw_Cap = (uint16_t)_Capacity * 2;
@@ -838,17 +838,14 @@ bool MAX17055::is_Battery_Removal(void) {
 }
 
 // Config Functions
-bool MAX17055::Set_dQAcc(uint16_t _Capacity) {
-
-	// Handle Capacity
-	_Capacity /= 32;
+bool MAX17055::Set_dQAcc(const uint16_t _Capacity) {
 
 	// Declare Default Data Array
 	uint8_t _Data[2];
 
 	// Set Data Low/High Byte
-	_Data[0] = ((_Capacity & (uint16_t)0x00FF));
-	_Data[1] = ((_Capacity & (uint16_t)0xFF00) >> 8);
+	_Data[0] = (((_Capacity / 32) & (uint16_t)0x00FF));
+	_Data[1] = (((_Capacity / 32) & (uint16_t)0xFF00) >> 8);
 
 	// Set Register
 	bool _Result = I2C.Write_Multiple_Register(__I2C__MAX17055__Addr__, 0x45, _Data, 2);
@@ -857,7 +854,7 @@ bool MAX17055::Set_dQAcc(uint16_t _Capacity) {
 	return(_Result);
 
 }
-bool MAX17055::Set_dPAcc(uint16_t _Capacity) {
+bool MAX17055::Set_dPAcc(const uint16_t _Capacity) {
 
 	// Declare dQAcc Variable
 	uint8_t _dQAcc[2];
@@ -885,7 +882,7 @@ bool MAX17055::Set_dPAcc(uint16_t _Capacity) {
 	return(_Result);
 
 }
-bool MAX17055::Set_ModelCfg(uint8_t _Model_ID, bool _VChg) {
+bool MAX17055::Set_ModelCfg(const uint8_t _Model_ID, const bool _VChg) {
 
 	// Declare Variable
 	uint16_t _Data_Set = 0x00;
@@ -928,7 +925,7 @@ bool MAX17055::Set_ModelCfg(uint8_t _Model_ID, bool _VChg) {
 	return(_Result);
 
 }
-bool MAX17055::Set_HibCFG(uint16_t _Config) {
+bool MAX17055::Set_HibCFG(const uint16_t _Config) {
 
 	// Declare Default Data Array
 	uint8_t _Data[2];
@@ -944,7 +941,7 @@ bool MAX17055::Set_HibCFG(uint16_t _Config) {
 	return(_Result);
 
 }
-bool MAX17055::Set_Config(uint8_t _Channel, uint16_t _Config) {
+bool MAX17055::Set_Config(const uint8_t _Channel, const uint16_t _Config) {
 
 	// Declare Default Data Array
 	uint8_t _Data[2];
