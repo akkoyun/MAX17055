@@ -26,7 +26,7 @@ bool MAX17055::Begin(const uint16_t _Design_Capacity, const float _Resistor) {
 	Set_Empty_Recovery_Voltage(3.0, 4.1);
 
 	// Max Min Voltage Register
-	Set_Empty_Recovery_Voltage(3.0, 4.0);
+	Set_Max_Min_Voltage(3.0, 4.0);
 
 	// IChgTerm Register
 	Set_Charge_Termination_Current();
@@ -42,12 +42,8 @@ bool MAX17055::Begin(const uint16_t _Design_Capacity, const float _Resistor) {
 // Voltage Functions
 float MAX17055::Instant_Voltage(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
-	uint8_t _Read_Count = 1;
-	uint8_t _Average_Type = 1;
+	const uint8_t _Read_Count = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -67,23 +63,22 @@ float MAX17055::Instant_Voltage(void) {
 		// Calculate Measurement
 		_Measurement_Array[_Read_ID] = ((double)Measurement_Raw * 1.25 / 16) / 1000;
 
+		// Debug Terminal
+		//Serial.println(_Measurement_Array[_Read_ID]);
+
 	}
-	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 float MAX17055::Average_Voltage(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
-	uint8_t _Read_Count = 5;
-	uint8_t _Average_Type = 1;
+	const uint8_t _Read_Count = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -104,22 +99,18 @@ float MAX17055::Average_Voltage(void) {
 		_Measurement_Array[_Read_ID] = ((double)Measurement_Raw * 1.25 / 16) / 1000;
 
 	}
-	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 float MAX17055::Empty_Voltage(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
-	uint8_t _Read_Count = 5;
-	uint8_t _Average_Type = 1;
+	uint8_t _Read_Count = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -142,21 +133,17 @@ float MAX17055::Empty_Voltage(void) {
 
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 float MAX17055::Recovery_Voltage(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
-	uint8_t _Read_Count = 5;
-	uint8_t _Average_Type = 1;
+	uint8_t _Read_Count = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -179,11 +166,11 @@ float MAX17055::Recovery_Voltage(void) {
 
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 bool MAX17055::Set_Empty_Recovery_Voltage(const float _Empty_Voltage, const float _Recovery_Voltage) {
@@ -212,7 +199,7 @@ bool MAX17055::Set_Empty_Recovery_Voltage(const float _Empty_Voltage, const floa
 	return(_Result);
 
 }
-bool MAX17055::Set_Max_Min_Voltage(const float _Max_Voltage, const float _Min_Voltage) {
+bool MAX17055::Set_Max_Min_Voltage(const float _Min_Voltage, const float _Max_Voltage) {
 
 	// Set Empty Raw
 	uint32_t _Raw_Max_Voltage = ((uint32_t)_Max_Voltage * 1000) / 20;
@@ -242,12 +229,8 @@ bool MAX17055::Set_Max_Min_Voltage(const float _Max_Voltage, const float _Min_Vo
 // Current Functions
 float MAX17055::Instant_Current(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
 	uint8_t _Read_Count = 5;
-	uint8_t _Average_Type = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -281,21 +264,17 @@ float MAX17055::Instant_Current(void) {
 
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 float MAX17055::Average_Current(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
 	uint8_t _Read_Count = 5;
-	uint8_t _Average_Type = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -329,21 +308,17 @@ float MAX17055::Average_Current(void) {
 
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 float MAX17055::Charge_Termination_Current(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
 	uint8_t _Read_Count = 1;
-	uint8_t _Average_Type = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -365,11 +340,11 @@ float MAX17055::Charge_Termination_Current(void) {
 		
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 bool MAX17055::Set_Charge_Termination_Current(void) {
@@ -395,12 +370,8 @@ bool MAX17055::Set_Charge_Termination_Current(void) {
 // State of Charge Functions
 float MAX17055::State_Of_Charge(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
 	uint8_t _Read_Count = 1;
-	uint8_t _Average_Type = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -419,21 +390,17 @@ float MAX17055::State_Of_Charge(void) {
 
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 float MAX17055::Average_State_Of_Charge(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
 	uint8_t _Read_Count = 5;
-	uint8_t _Average_Type = 1;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
@@ -452,11 +419,11 @@ float MAX17055::Average_State_Of_Charge(void) {
 
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 
@@ -538,18 +505,14 @@ bool MAX17055::Set_Design_Capacity(const uint16_t _Capacity) {
 // Temperature Functions
 float MAX17055::Temperature(void) {
 
-	// Define Statistical Objects
-	Statistical _DataSet;
-
 	// Define Statistical Variables
-	uint8_t _Read_Count = 1;
-	uint8_t _Average_Type = 1;
+	uint8_t _Read_Count = 5;
 
 	// Define Measurement Read Array
 	float _Measurement_Array[_Read_Count];
 
 	// Read Loop For Read Count
-	for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+	for (size_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
 
 		// Define Data Variable
 		uint8_t MAX17055_Data[2];
@@ -571,28 +534,22 @@ float MAX17055::Temperature(void) {
 
 		// Calculate Data
 		_Measurement_Array[_Read_ID] = (double)Measurement_Raw / 256;
-		
+
 		// Assign Signiture
 		if (_Signiture) _Measurement_Array[_Read_ID] *= -1;
 
-		// Command Delay
-		delay(10);
-
 	}
 	
-	// Calculate Data
-	float _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Arithmetic_Average());
 
 }
 
 // Time Functions
 uint16_t MAX17055::Time_To_Empty(void) {
-
-	// Define Statistical Objects
-	Statistical _DataSet;
 
 	// Define Statistical Variables
 	uint8_t _Read_Count = 5;
@@ -618,17 +575,14 @@ uint16_t MAX17055::Time_To_Empty(void) {
 
 	}
 	
-	// Calculate Data
-	uint16_t _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, sizeof(_Measurement_Array) / sizeof(_Measurement_Array[0]));
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Average(_Average_Type));
 
 }
 uint16_t MAX17055::Time_To_Full(void) {
-
-	// Define Statistical Objects
-	Statistical _DataSet;
 
 	// Define Statistical Variables
 	uint8_t _Read_Count = 5;
@@ -654,11 +608,11 @@ uint16_t MAX17055::Time_To_Full(void) {
 
 	}
 	
-	// Calculate Data
-	uint16_t _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, sizeof(_Measurement_Array) / sizeof(_Measurement_Array[0]));
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Average(_Average_Type));
 
 }
 
@@ -679,9 +633,6 @@ uint16_t MAX17055::Battery_Age(void) {
 
 }
 uint16_t MAX17055::Charge_Cycle(void) {
-
-	// Define Statistical Objects
-	Statistical _DataSet;
 
 	// Define Statistical Variables
 	uint8_t _Read_Count = 5;
@@ -707,11 +658,11 @@ uint16_t MAX17055::Charge_Cycle(void) {
 
 	}
 	
-	// Calculate Data
-	uint16_t _Average = _DataSet.Array_Average(_Measurement_Array, _Read_Count, _Average_Type);
+	// Construct Object
+	Array_Stats<float> Data_Array(_Measurement_Array, sizeof(_Measurement_Array) / sizeof(_Measurement_Array[0]));
 
 	// End Function
-	return(_Average);
+	return(Data_Array.Average(_Average_Type));
 
 }
 
@@ -733,6 +684,9 @@ bool MAX17055::is_Min_Current(void) {
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x02);
 
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x02, false);
+
 	// End Function
 	return(_Result);
 	
@@ -741,6 +695,9 @@ bool MAX17055::is_Max_Current(void) {
 	
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x06);
+
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x06, false);
 
 	// End Function
 	return(_Result);
@@ -751,6 +708,9 @@ bool MAX17055::is_Min_Voltage(void) {
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x08);
 
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x08, false);
+
 	// End Function
 	return(_Result);
 	
@@ -759,6 +719,9 @@ bool MAX17055::is_Max_Voltage(void) {
 	
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x12);
+
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x12, false);
 
 	// End Function
 	return(_Result);
@@ -769,6 +732,9 @@ bool MAX17055::is_Min_Temperature(void) {
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x09);
 
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x09, false);
+
 	// End Function
 	return(_Result);
 	
@@ -777,6 +743,9 @@ bool MAX17055::is_Max_Temperature(void) {
 	
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x13);
+
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x13, false);
 
 	// End Function
 	return(_Result);
@@ -787,6 +756,9 @@ bool MAX17055::is_Min_SOC(void) {
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x10);
 
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x10, false);
+
 	// End Function
 	return(_Result);
 	
@@ -795,6 +767,9 @@ bool MAX17055::is_Max_SOC(void) {
 	
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x14);
+
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x14, false);
 
 	// End Function
 	return(_Result);
@@ -805,6 +780,9 @@ bool MAX17055::is_Battery_Present(void) {
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x03);
 
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x03, false);
+
 	// End Function
 	return(_Result);
 	
@@ -813,6 +791,9 @@ bool MAX17055::is_SOC_Change(void) {
 	
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x07);
+
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x07, false);
 
 	// End Function
 	return(_Result);
@@ -823,6 +804,9 @@ bool MAX17055::is_Battery_Insertion(void) {
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x11);
 
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x11, false);
+
 	// End Function
 	return(_Result);
 	
@@ -831,6 +815,9 @@ bool MAX17055::is_Battery_Removal(void) {
 	
 	// Get Status Bit
 	bool _Result = I2C.Read_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x15);
+
+	// Reset Bit
+	I2C.Clear_Register_Bit(__I2C__MAX17055__Addr__, 0x00, 0x15, false);
 
 	// End Function
 	return(_Result);
