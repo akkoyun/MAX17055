@@ -19,121 +19,204 @@
 #include <I2C_Functions.h>
 #endif
 
-// Define Statistical Library
-#ifndef __Statistical__
-#include <Statistical.h>
-#endif
-
 // Define Gauge Parameters
 #define _MAX17055_Design_Capacity_		2000	// Battery Capacity
 #define _MAX17055_Resistor_				0.01	// Shunt Resistor
-#define _MAX17055_Empty_Voltage_		3.0		// Empty Voltage
-#define _MAX17055_Recovery_Voltage_		4.1		// Recovery Voltage
-#define _MAX17055_Min_Voltage_			3.0		// Min Voltage
-#define _MAX17055_Max_Voltage_			4.0		// Max Voltage
 
 class MAX17055 : public I2C_Functions {
 
 	private:
 
-		bool Set_Empty_Recovery_Voltage(const float _Empty_Voltage, const float _Recovery_Voltage) {
+		/**
+		 * @brief Set battery empty voltage function.
+		 * @param _Empty_Voltage Empty voltage value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Empty_Voltage(float _Empty_Voltage) {
 
-			// Set Empty Raw
-			uint32_t _Raw_Empty_Voltage = (uint32_t(_Empty_Voltage * 1000) / 10);
-			_Raw_Empty_Voltage = (_Raw_Empty_Voltage << 7) & 0xFF80;
+			// Set Voltage Value
+			uint16_t _Raw_Voltage = ((uint16_t)((uint16_t)_Empty_Voltage * 100) << 7 ) & 0b1111111110000000;
 
-			// Set Recovery Raw
-			uint32_t _Raw_Recovery_Voltage = ((uint32_t(_Recovery_Voltage * 1000) / 40) & 0x7F);
+			// Define Data Variable
+			uint8_t MAX17055_RAW_Data[2];
 
-			// Set Raw Data
-			uint32_t _Raw_Voltage = _Raw_Empty_Voltage | _Raw_Recovery_Voltage;
+			// Handle Data
+			MAX17055_RAW_Data[1] = (uint8_t)(_Raw_Voltage >> 8);
+			MAX17055_RAW_Data[0] = (uint8_t)(_Raw_Voltage & 0x00FF);
 
-			// Declare Default Data Array
-			uint8_t _Data[2];
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
 
-			// Set Data Low/High Byte
-			_Data[0] = ((_Raw_Voltage & (uint16_t)0x00FF));
-			_Data[1] = ((_Raw_Voltage & (uint16_t)0xFF00) >> 8);
+			// Read Current Register
+			Read_Multiple_Register(0x3A, MAX17055_Current_Data, 2, true);
+
+			// Clear Current Value
+			MAX17055_Current_Data[0] &= 0b01111111;
+			MAX17055_Current_Data[1] &= 0b00000000;
+
+			// Define Data Variable
+			uint8_t MAX17055_Handle_Data[2];
+
+			// Handle Data
+			MAX17055_Handle_Data[0] = MAX17055_Current_Data[0] | MAX17055_RAW_Data[0];
+			MAX17055_Handle_Data[1] = MAX17055_Current_Data[1] | MAX17055_RAW_Data[1];
 
 			// Set Register
-			bool _Result = Write_Multiple_Register(0x3A, _Data, 2);
+			bool _Result = Write_Multiple_Register(0x3A, MAX17055_Handle_Data, 2);
 
 			// End Function
 			return(_Result);
 
 		}
 
-		bool Set_Max_Min_Voltage(const float _Min_Voltage, const float _Max_Voltage) {
+		/**
+		 * @brief Set battery recovery voltage function.
+		 * @param _Recovery_Voltage Recovery voltage value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Recovery_Voltage(float _Recovery_Voltage) {
 
-			// Set Empty Raw
-			uint32_t _Raw_Max_Voltage = ((uint32_t)_Max_Voltage * 1000) / 20;
-			_Raw_Max_Voltage = (_Raw_Max_Voltage << 7) & 0xFF80;
+			// Handle Value
+			_Recovery_Voltage = _Recovery_Voltage * 1000 / 40;
 
-			// Set Recovery Raw
-			uint32_t _Raw_Min_Voltage = (((uint32_t)_Min_Voltage * 1000) / 20) & 0x7F;
+			// Set Voltage Value
+			uint16_t _Raw_Voltage = ((uint16_t)_Recovery_Voltage);
 
-			// Set Raw Data
-			uint32_t _Raw_Voltage = _Raw_Max_Voltage | _Raw_Min_Voltage;
+			// Define Data Variable
+			uint8_t MAX17055_RAW_Data[2];
 
-			// Declare Default Data Array
-			uint8_t _Data[2];
+			// Handle Data
+			MAX17055_RAW_Data[1] = (uint8_t)(_Raw_Voltage >> 8);
+			MAX17055_RAW_Data[0] = (uint8_t)(_Raw_Voltage & 0x00FF);
 
-			// Set Data Low/High Byte
-			_Data[0] = ((_Raw_Voltage & (uint16_t)0x00FF));
-			_Data[1] = ((_Raw_Voltage & (uint16_t)0xFF00) >> 8);
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0x3A, MAX17055_Current_Data, 2, true);
+
+			// Clear Current Value
+			MAX17055_Current_Data[0] &= 0b10000000;
+			MAX17055_Current_Data[1] &= 0b11111111;
+
+			// Define Data Variable
+			uint8_t MAX17055_Handle_Data[2];
+
+			// Handle Data
+			MAX17055_Handle_Data[0] = MAX17055_Current_Data[0] | MAX17055_RAW_Data[0];
+			MAX17055_Handle_Data[1] = MAX17055_Current_Data[1] | MAX17055_RAW_Data[1];
 
 			// Set Register
-			bool _Result = Write_Multiple_Register(0x3A, _Data, 2);
+			bool _Result = Write_Multiple_Register(0x3A, MAX17055_Handle_Data, 2);
 
 			// End Function
 			return(_Result);
 
 		}
 
-		float Charge_Termination_Current(void) {
+		/**
+		 * @brief Set battery minimum voltage function.
+		 * @param _Minimum_Voltage Minimum voltage value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Min_Voltage(float _Minimum_Voltage) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 1;
+			// Set Voltage Value
+			uint8_t _Raw_Voltage = (uint8_t)(_Minimum_Voltage * 1000 / 20);
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Read Current Register
+			Read_Multiple_Register(0x01, MAX17055_Current_Data, 2, true);
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
+			// Set Voltage Value
+			MAX17055_Current_Data[0] = _Raw_Voltage;
 
-				// Get Data from IC
-				Read_Multiple_Register(0x1E, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (((double)Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
-				
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Set Register
+			bool _Result = Write_Multiple_Register(0x01, MAX17055_Current_Data, 2);
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Result);
 
 		}
 
-		bool Set_Charge_Termination_Current(void) {
+		/**
+		 * @brief Set battery maximum voltage function.
+		 * @param _Maximum_Voltage Maximum voltage value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Max_Voltage(float _Maximum_Voltage) {
 
-			// Set Empty Raw
-			uint32_t _Raw_Termination_Voltage = 0x0280;
+			// Set Voltage Value
+			uint8_t _Raw_Voltage = (uint8_t)(_Maximum_Voltage * 1000 / 20);
+
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0x01, MAX17055_Current_Data, 2, true);
+
+			// Set Voltage Value
+			MAX17055_Current_Data[1] = _Raw_Voltage;
+
+			// Set Register
+			bool _Result = Write_Multiple_Register(0x01, MAX17055_Current_Data, 2);
+
+			// End Function
+			return(_Result);
+
+		}
+
+		/**
+		 * @brief Set battery maximum current function.
+		 * @param _Maximum_Current Maximum current value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Max_Current(float _Maximum_Current) {
+
+			// Set Current Value
+			uint8_t _Raw_Current = (uint8_t)(_Maximum_Current * 1000 / 40);
+
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0xB4, MAX17055_Current_Data, 2, true);
+
+			// Set Current Value
+			MAX17055_Current_Data[1] = _Raw_Current;
+
+			// Set Register
+			bool _Result = Write_Multiple_Register(0xB4, MAX17055_Current_Data, 2);
+
+			// End Function
+			return(_Result);
+
+		}
+
+		/**
+		 * @brief Set battery charge termination current function.
+		 * @param _Charge_Termination_Current Charge termination current value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Charge_Termination_Current(float _Charge_Termination_Current) {
+
+			// Handle Raw Data
+			uint16_t _RAW_Data = (uint16_t)(_Charge_Termination_Current * 1000000 * _MAX17055_Resistor_ / 1.5625);
 
 			// Declare Default Data Array
 			uint8_t _Data[2];
 
 			// Set Data Low/High Byte
-			_Data[0] = ((_Raw_Termination_Voltage & (uint16_t)0x00FF));
-			_Data[1] = ((_Raw_Termination_Voltage & (uint16_t)0xFF00) >> 8);
+			_Data[0] = ((_RAW_Data & (uint16_t)0x00FF));
+			_Data[1] = ((_RAW_Data & (uint16_t)0xFF00) >> 8);
 
 			// Set Register
 			bool _Result = Write_Multiple_Register(0x1E, _Data, 2);
@@ -143,6 +226,12 @@ class MAX17055 : public I2C_Functions {
 
 		}
 
+		/**
+		 * @brief Set battery design capacity function.
+		 * @param _Capacity Battery design capacity value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
 		bool Set_Design_Capacity(const uint16_t _Capacity) {
 
 			// Set Raw
@@ -157,6 +246,106 @@ class MAX17055 : public I2C_Functions {
 
 			// Set Register
 			bool _Result = Write_Multiple_Register(0x18, _Data, 2);
+
+			// End Function
+			return(_Result);
+
+		}
+
+		/**
+		 * @brief Set battery minimum SOC function.
+		 * @param _Minimum_SOC Minimum SOC value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Min_SOC(uint8_t _Minimum_SOC) {
+
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0x03, MAX17055_Current_Data, 2, true);
+
+			// Set Voltage Value
+			MAX17055_Current_Data[0] = _Minimum_SOC;
+
+			// Set Register
+			bool _Result = Write_Multiple_Register(0x03, MAX17055_Current_Data, 2);
+
+			// End Function
+			return(_Result);
+
+		}
+
+		/**
+		 * @brief Set battery maximum SOC function.
+		 * @param _Maximum_SOC Maximum SOC value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Max_SOC(uint8_t _Maximum_SOC) {
+
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0x03, MAX17055_Current_Data, 2, true);
+
+			// Set Voltage Value
+			MAX17055_Current_Data[1] = _Maximum_SOC;
+
+			// Set Register
+			bool _Result = Write_Multiple_Register(0x03, MAX17055_Current_Data, 2);
+
+			// End Function
+			return(_Result);
+
+		}
+
+		/**
+		 * @brief Set battery minimum temperature function.
+		 * @param _Minimum_Temperature Minimum temperature value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Min_Temperature(uint8_t _Minimum_Temperature) {
+
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0x02, MAX17055_Current_Data, 2, true);
+
+			// Set Voltage Value
+			MAX17055_Current_Data[0] = _Minimum_Temperature;
+
+			// Set Register
+			bool _Result = Write_Multiple_Register(0x02, MAX17055_Current_Data, 2);
+
+			// End Function
+			return(_Result);
+
+		}
+
+		/**
+		 * @brief Set battery maximum temperature function.
+		 * @param _Maximum_Temperature Maximum temperature value.
+		 * @return true Function succes.
+		 * @return false Function fail.
+		 */
+		bool Set_Max_Temperature(uint8_t _Maximum_Temperature) {
+
+			// Define Data Variable
+			uint8_t MAX17055_Current_Data[2];
+
+			// Read Current Register
+			Read_Multiple_Register(0x02, MAX17055_Current_Data, 2, true);
+
+			// Set Voltage Value
+			MAX17055_Current_Data[1] = _Maximum_Temperature;
+
+			// Set Register
+			bool _Result = Write_Multiple_Register(0x02, MAX17055_Current_Data, 2);
 
 			// End Function
 			return(_Result);
@@ -209,14 +398,13 @@ class MAX17055 : public I2C_Functions {
 
 		}
 
-		bool Set_ModelCfg(const uint8_t _Model_ID, const bool _VChg) {
+		bool Set_ModelCfg(const uint8_t _Model_ID) {
 
 			// Declare Variable
 			uint16_t _Data_Set = 0x00;
 
 			// Set Charge Voltage
-			if (_VChg == true) bitSet(_Data_Set, 10);
-			if (_VChg == false) bitClear(_Data_Set, 10);
+			bitSet(_Data_Set, 10);
 
 			// Set Battery Model
 			if (_Model_ID == 0) {
@@ -291,7 +479,25 @@ class MAX17055 : public I2C_Functions {
 
 		}
 
+
 	public:
+
+		// Declare Global Variable
+		struct Status_Struct {
+			bool Power_on_Reset = false;
+			bool Voltage_Min = false;
+			bool Voltage_Max = false;
+			bool Current_Min = false;
+			bool Current_Max = false;
+			bool Temperature_Min = false;
+			bool Temperature_Max = false;
+			bool SOC_Min = false;
+			bool SOC_Max = false;
+			bool Battery_Status = false;
+			bool SOC_Change = false;
+			bool Battery_Insertion = false;
+			bool Battery_Removal = false;
+		} Status;
 
 		MAX17055(bool _Multiplexer_Enable, uint8_t _Multiplexer_Channel) : I2C_Functions(__I2C_Addr_MAX17055__, _Multiplexer_Enable, _Multiplexer_Channel) {
 
@@ -301,19 +507,40 @@ class MAX17055 : public I2C_Functions {
 			this->Set_HibCFG(0x0000);
 
 			// Design Capacity Register
-			this->Set_Design_Capacity(_MAX17055_Design_Capacity_);
+			this->Set_Design_Capacity(2000);
 
 			// ModelCfg Register
-			this->Set_ModelCfg(2, true);
-
-			// VEmpty Register
-			this->Set_Empty_Recovery_Voltage(_MAX17055_Empty_Voltage_, _MAX17055_Recovery_Voltage_);
-
-			// Max Min Voltage Register
-			this->Set_Max_Min_Voltage(_MAX17055_Min_Voltage_, _MAX17055_Max_Voltage_);
+			this->Set_ModelCfg(2);
 
 			// IChgTerm Register
-			this->Set_Charge_Termination_Current();
+			this->Set_Charge_Termination_Current(0.250);
+
+			// VEmpty Register
+			this->Set_Empty_Voltage(3.000);
+
+			// VRecovery Register
+			this->Set_Recovery_Voltage(3.880);
+
+			// Set Minimum Voltage
+			this->Set_Min_Voltage(3.800);
+
+			// Set Maximum Voltage
+			this->Set_Max_Voltage(4.200);
+
+			// Set Maximum Current
+			this->Set_Max_Current(1.000);
+
+			// Set Minimum SOC
+			this->Set_Min_SOC(20);
+
+			// Set Maximum SOC
+			this->Set_Max_SOC(90);
+
+			// Set Minimum Temperature
+			this->Set_Min_Temperature(10);
+
+			// Set Maximum Temperature
+			this->Set_Max_Temperature(50);
 
 			// I2C Delay
 			delay(5);
@@ -322,285 +549,173 @@ class MAX17055 : public I2C_Functions {
 
 		float Instant_Voltage(void) {
 
-			// Define Statistical Variables
-			const uint8_t _Read_Count = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x09, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x09, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Calculate Measurement
-				_Measurement_Array[_Read_ID] = ((double)Measurement_Raw * 1.25 / 16) / 1000;
-
-			}
-
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Calculate Measurement
+			float _Value = ((double)Measurement_Raw * 1.25 / 16) / 1000;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
 		float Average_Voltage(void) {
 
-			// Define Statistical Variables
-			const uint8_t _Read_Count = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x19, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x19, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Calculate Measurement
-				_Measurement_Array[_Read_ID] = ((double)Measurement_Raw * 1.25 / 16) / 1000;
-
-			}
-
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Calculate Measurement
+			float _Value = ((double)Measurement_Raw * 1.25 / 16) / 1000;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
-		float Empty_Voltage(void) {
+		float Get_Empty_Voltage(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x3A, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
+			Measurement_Raw = ((Measurement_Raw & 0xFF80) >> 7);
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x3A, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-				Measurement_Raw = ((Measurement_Raw & 0xFF80) >> 7);
-
-				// Calculate Measurement
-				_Measurement_Array[_Read_ID] = ((double)Measurement_Raw * 10) / 1000;
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Calculate Measurement
+			float _Value = ((double)Measurement_Raw * 10) / 1000;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
 		float Recovery_Voltage(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x3A, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
+			Measurement_Raw = (Measurement_Raw & 0x7F);
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x3A, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-				Measurement_Raw = (Measurement_Raw & 0x7F);
-
-				// Calculate Measurement
-				_Measurement_Array[_Read_ID] = ((double)Measurement_Raw * 40) / 1000;
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Calculate Measurement
+			float _Value = ((double)Measurement_Raw * 40) / 1000;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
 		float Instant_Current(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x0A, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
+			// Declare Variables
+			bool _Signiture = false;
 
-				// Get Data from IC
-				Read_Multiple_Register(0x0A, MAX17055_Data, 2, false);
+			// Control for Negative Value
+			if ((Measurement_Raw >> 12) == 0xF) {
+				Measurement_Raw = 0xFFFF - Measurement_Raw;
+				_Signiture = true;
+			} 
 
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Declare Variables
-				bool _Signiture = false;
-
-				// Control for Negative Value
-				if ((Measurement_Raw >> 12) == 0xF) {
-					Measurement_Raw = 0xFFFF - Measurement_Raw;
-					_Signiture = true;
-				} 
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (((double)Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
-				
-				// Assign Signiture
-				if (_Signiture) _Measurement_Array[_Read_ID] *= -1;
-
-			}
+			// Calculate Data
+			float _Value = (((double)Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
 			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Assign Signiture
+			if (_Signiture) _Value *= -1;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
 		float Average_Current(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x0B, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
+			// Declare Variables
+			bool _Signiture = false;
 
-				// Get Data from IC
-				Read_Multiple_Register(0x0B, MAX17055_Data, 2, false);
+			// Control for Negative Value
+			if ((Measurement_Raw >> 12) == 0xF) {
+				Measurement_Raw = 0xFFFF - Measurement_Raw;
+				_Signiture = true;
+			} 
 
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Declare Variables
-				bool _Signiture = false;
-
-				// Control for Negative Value
-				if ((Measurement_Raw >> 12) == 0xF) {
-					Measurement_Raw = 0xFFFF - Measurement_Raw;
-					_Signiture = true;
-				} 
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (((double)Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
-				
-				// Assign Signiture
-				if (_Signiture) _Measurement_Array[_Read_ID] *= -1;
-
-			}
+			// Calculate Data
+			float _Value = (((double)Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
 			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Assign Signiture
+			if (_Signiture) _Value *= -1;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
 		float State_Of_Charge(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x06, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Calculate Measurement
+			float _Value = ((double)MAX17055_Data[1] + (double)MAX17055_Data[0] / 256);
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x06, MAX17055_Data, 2, false);
-
-				// Calculate Measurement
-				_Measurement_Array[_Read_ID] = ((double)MAX17055_Data[1] + (double)MAX17055_Data[0] / 256);
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
-
-			// End Function
-			return(Data_Array.Arithmetic_Average());
+			// End Functiom
+			return(_Value);
 
 		}
 
 		float Average_State_Of_Charge(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x0E, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
-
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x0E, MAX17055_Data, 2, false);
-
-				// Calculate Measurement
-				_Measurement_Array[_Read_ID] = ((double)MAX17055_Data[1] + (double)MAX17055_Data[0] / 256);
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Calculate Measurement
+			float _Value = ((double)MAX17055_Data[1] + (double)MAX17055_Data[0] / 256);
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
@@ -663,114 +778,70 @@ class MAX17055 : public I2C_Functions {
 
 		float Temperature(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x08, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (size_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x08, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Declare Variables
-				bool _Signiture = false;
-				
-				// Control for Negative Value
-				if ((Measurement_Raw >> 12) == 0xF) {
-					Measurement_Raw = 0xFFFF - Measurement_Raw;
-					_Signiture = true;
-				}
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (double)Measurement_Raw / 256;
-
-				// Assign Signiture
-				if (_Signiture) _Measurement_Array[_Read_ID] *= -1;
-
-			}
+			// Declare Variables
+			bool _Signiture = false;
 			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, _Read_Count);
+			// Control for Negative Value
+			if ((Measurement_Raw >> 12) == 0xF) {
+				Measurement_Raw = 0xFFFF - Measurement_Raw;
+				_Signiture = true;
+			}
+
+			// Calculate Data
+			float _Value = (double)Measurement_Raw / 256;
+
+			// Assign Signiture
+			if (_Signiture) _Value *= -1;
 
 			// End Function
-			return(Data_Array.Arithmetic_Average());
+			return(_Value);
 
 		}
 
 		uint16_t Time_To_Empty(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
-			uint8_t _Average_Type = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x11, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x11, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (uint16_t)Measurement_Raw * 5.625 / 60 / 60;
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, sizeof(_Measurement_Array) / sizeof(_Measurement_Array[0]));
+			// Calculate Data
+			float _Value = (uint16_t)Measurement_Raw * 5.625 / 60 / 60;
 
 			// End Function
-			return(Data_Array.Average(_Average_Type));
+			return(_Value);
 
 		}
 
 		uint16_t Time_To_Full(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
-			uint8_t _Average_Type = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x20, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x20, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (uint16_t)Measurement_Raw * 5.625 / 60 / 60;
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, sizeof(_Measurement_Array) / sizeof(_Measurement_Array[0]));
+			// Calculate Data
+			float _Value = (uint16_t)Measurement_Raw * 5.625 / 60 / 60;
 
 			// End Function
-			return(Data_Array.Average(_Average_Type));
+			return(_Value);
 
 		}
 
@@ -792,205 +863,72 @@ class MAX17055 : public I2C_Functions {
 
 		uint16_t Charge_Cycle(void) {
 
-			// Define Statistical Variables
-			uint8_t _Read_Count = 5;
-			uint8_t _Average_Type = 1;
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// Define Measurement Read Array
-			float _Measurement_Array[_Read_Count];
+			// Get Data from IC
+			Read_Multiple_Register(0x17, MAX17055_Data, 2, false);
 
-			// Read Loop For Read Count
-			for (uint8_t _Read_ID = 0; _Read_ID < _Read_Count; _Read_ID++) {
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-				// Define Data Variable
-				uint8_t MAX17055_Data[2];
-
-				// Get Data from IC
-				Read_Multiple_Register(0x17, MAX17055_Data, 2, false);
-
-				// Combine Read Bytes
-				uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
-
-				// Calculate Data
-				_Measurement_Array[_Read_ID] = (uint16_t)Measurement_Raw;
-
-			}
-			
-			// Construct Object
-			Array_Stats<float> Data_Array(_Measurement_Array, sizeof(_Measurement_Array) / sizeof(_Measurement_Array[0]));
+			// Calculate Data
+			float _Value = (uint16_t)Measurement_Raw;
 
 			// End Function
-			return(Data_Array.Average(_Average_Type));
+			return(_Value);
 
 		}
 
-		bool is_Power_on_Reset(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x01);
+		void Status_Control(void) {
 
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x01, false);
+			// Define Data Variable
+			uint8_t _Status_Register[2];
 
-			// End Function
-			return(_Result);
-			
+			// Read Status Register
+			Read_Multiple_Register(0x00, _Status_Register, 2, false);
+
+			// Set Value
+			this->Status.Power_on_Reset = bitRead(_Status_Register[0], 1);
+			this->Status.Current_Min = bitRead(_Status_Register[0], 2);
+			this->Status.Battery_Status = bitRead(_Status_Register[0], 3);
+			this->Status.Current_Max = bitRead(_Status_Register[0], 6);
+			this->Status.SOC_Change = bitRead(_Status_Register[0], 7);
+			this->Status.Voltage_Min = bitRead(_Status_Register[1], 0);
+			this->Status.Temperature_Min = bitRead(_Status_Register[1], 1);
+			this->Status.SOC_Min = bitRead(_Status_Register[1], 2);
+			this->Status.Battery_Insertion = bitRead(_Status_Register[1], 3);
+			this->Status.Voltage_Max = bitRead(_Status_Register[1], 4);
+			this->Status.Temperature_Max = bitRead(_Status_Register[1], 5);
+			this->Status.SOC_Max = bitRead(_Status_Register[1], 6);
+			this->Status.Battery_Removal = bitRead(_Status_Register[1], 7);
+
+			// Clear Bits
+			_Status_Register[0] = 0x00;
+			_Status_Register[1] = 0x00;
+
+			// Write Status Register
+			Write_Multiple_Register(0x00, _Status_Register, 2);
+
 		}
 
-		bool is_Min_Current(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x02);
+		float Get_Charge_Termination_Current(void) {
 
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x02, false);
+			// Define Data Variable
+			uint8_t MAX17055_Data[2];
 
-			// End Function
-			return(_Result);
-			
-		}
+			// Get Data from IC
+			Read_Multiple_Register(0x1E, MAX17055_Data, 2, false);
 
-		bool is_Max_Current(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x06);
+			// Combine Read Bytes
+			uint16_t Measurement_Raw = ((uint16_t)MAX17055_Data[1] << 8) | (uint16_t)MAX17055_Data[0];
 
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x06, false);
+			// Calculate Data
+			float Value = (((double)Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
 
 			// End Function
-			return(_Result);
-			
-		}
+			return(Value);
 
-		bool is_Min_Voltage(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x08);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x08, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Max_Voltage(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x12);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x12, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Min_Temperature(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x09);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x09, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Max_Temperature(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x13);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x13, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Min_SOC(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x10);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x10, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Max_SOC(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x14);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x14, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Battery_Present(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x03);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x03, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_SOC_Change(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x07);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x07, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Battery_Insertion(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x11);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x11, false);
-
-			// End Function
-			return(_Result);
-			
-		}
-
-		bool is_Battery_Removal(void) {
-			
-			// Get Status Bit
-			bool _Result = Read_Register_Bit(0x00, 0x15);
-
-			// Reset Bit
-			Clear_Register_Bit(0x00, 0x15, false);
-
-			// End Function
-			return(_Result);
-			
 		}
 
 };
