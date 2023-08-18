@@ -9,15 +9,12 @@ void setup() {
 	Serial.println("     Battery Abstract     ");
 	Serial.println("--------------------------");
 
-	// Set Multiplexer
-	I2C.Set_Multiplexer(0x70, 4);
-
-	// Start Battery Gauge
-	Battery.Begin(2000, 0.01);
-
 }
 
 void loop() {
+
+	// Create Charger Object
+	MAX17055 Battery(true, 4);
 
 	// Set Start Time
 	uint32_t Time = millis();
@@ -30,7 +27,6 @@ void loop() {
 	Serial.print("Recovery Voltage           : "); Serial.print(Battery.Recovery_Voltage()); Serial.println(" V");
 	Serial.print("Instant Current            : "); Serial.print(Battery.Instant_Current()); Serial.println(" mA");
 	Serial.print("Average Current            : "); Serial.print(Battery.Average_Current()); Serial.println(" mA");
-	Serial.print("Charge Termination Current : "); Serial.print(Battery.Charge_Termination_Current()); Serial.println(" mA");
 	Serial.print("State of Charge            : "); Serial.print(Battery.State_Of_Charge(), 2); Serial.println(" %");
 	Serial.print("Instant Capacity           : "); Serial.print(Battery.Instant_Capacity()); Serial.println(" mAh");
     Serial.print("Full Capacity              : "); Serial.print(Battery.Full_Capacity()); Serial.println(" mAh");
