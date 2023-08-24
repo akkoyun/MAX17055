@@ -35,7 +35,7 @@
 	#endif
 
 	// Define MAX17055 Class
-	class MAX17055 : public I2C_Functions {
+	class MAX17055 : private I2C_Functions {
 
 		private:
 
@@ -463,6 +463,14 @@
 
 			// Library Constructor
 			MAX17055(const bool _Multiplexer_Enable = false, const uint8_t _Multiplexer_Channel = 0) : I2C_Functions(__I2C_Addr_MAX17055__, _Multiplexer_Enable, _Multiplexer_Channel) {
+				
+			}
+
+			// Begin Function
+			void Begin(void) {
+
+				// Begin I2C Communication
+				I2C_Functions::Begin();
 
 				// Set Configuration
 				this->Set_Config(1, 0x0000);
@@ -491,7 +499,7 @@
 				this->Set_Max_Voltage(4.200);
 
 				// Set Maximum Current
-				this->Set_Max_Current(1.000);
+				this->Set_Max_Current(2.000);
 
 				// Set Minimum SOC
 				this->Set_Min_SOC(20);
@@ -507,7 +515,7 @@
 
 				// I2C Delay
 				delay(5);
-				
+
 			}
 
 			// Get battery instant voltage function.
@@ -523,7 +531,7 @@
 				uint16_t _Measurement_Raw = ((uint16_t)_MAX17055_Data[1] << 8) | (uint16_t)_MAX17055_Data[0];
 
 				// Calculate Measurement
-				float _Value = ((float)_Measurement_Raw * 1.25 / 16) / 1000;
+				float _Value = ((double)_Measurement_Raw * 1.25 / 16) / 1000;
 
 				// End Function
 				return(_Value);
