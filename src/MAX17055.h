@@ -467,54 +467,67 @@
 			}
 
 			// Begin Function
-			void Begin(void) {
+			bool Begin(void) {
 
-				// Begin I2C Communication
+				// Start I2C
 				I2C_Functions::Begin();
 
-				// Set Configuration
-				this->Set_Config(1, 0x0000);
-				this->Set_Config(2, 0x0218);
-				this->Set_HibCFG(0x0000);
+				// Control for Device
+				if (I2C_Functions::Variables.Device.Detect) {
 
-				// Design Capacity Register
-				this->Set_Design_Capacity(2000);
+					// Set Configuration
+					this->Set_Config(1, 0x0000);
+					this->Set_Config(2, 0x0218);
+					this->Set_HibCFG(0x0000);
 
-				// ModelCfg Register
-				this->Set_ModelCfg(2);
+					// Design Capacity Register
+					this->Set_Design_Capacity(2000);
 
-				// IChgTerm Register
-				this->Set_Charge_Termination_Current(0.250);
+					// ModelCfg Register
+					this->Set_ModelCfg(2);
 
-				// VEmpty Register
-				this->Set_Empty_Voltage(3.000);
+					// IChgTerm Register
+					this->Set_Charge_Termination_Current(0.250);
 
-				// VRecovery Register
-				this->Set_Recovery_Voltage(3.880);
+					// VEmpty Register
+					this->Set_Empty_Voltage(3.000);
 
-				// Set Minimum Voltage
-				this->Set_Min_Voltage(3.800);
+					// VRecovery Register
+					this->Set_Recovery_Voltage(3.880);
 
-				// Set Maximum Voltage
-				this->Set_Max_Voltage(4.200);
+					// Set Minimum Voltage
+					this->Set_Min_Voltage(3.800);
 
-				// Set Maximum Current
-				this->Set_Max_Current(2.000);
+					// Set Maximum Voltage
+					this->Set_Max_Voltage(4.200);
 
-				// Set Minimum SOC
-				this->Set_Min_SOC(20);
+					// Set Maximum Current
+					this->Set_Max_Current(2.000);
 
-				// Set Maximum SOC
-				this->Set_Max_SOC(90);
+					// Set Minimum SOC
+					this->Set_Min_SOC(20);
 
-				// Set Minimum Temperature
-				this->Set_Min_Temperature(10);
+					// Set Maximum SOC
+					this->Set_Max_SOC(90);
 
-				// Set Maximum Temperature
-				this->Set_Max_Temperature(50);
+					// Set Minimum Temperature
+					this->Set_Min_Temperature(10);
 
-				// I2C Delay
-				delay(5);
+					// Set Maximum Temperature
+					this->Set_Max_Temperature(50);
+
+					// I2C Delay
+					delay(5);
+										
+					// End Function
+					return(true);
+
+				} else {
+
+					// End Function
+					return(false);
+
+				}
 
 			}
 
