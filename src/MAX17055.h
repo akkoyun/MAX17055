@@ -19,24 +19,13 @@
 		#include <I2C_Functions.h>
 	#endif
 
-	// Define Battery Capacity
-	#ifndef _MAX17055_Design_Capacity_
-		#define _MAX17055_Design_Capacity_		2000	// Battery Capacity
-	#endif
-	
-	// Define Gauge Resistor
-	#ifndef _MAX17055_Resistor_
-		#define _MAX17055_Resistor_				0.01	// Shunt Resistor
-	#endif
-
-	// Define MAX17055 Address
-	#ifndef __I2C_Addr_MAX17055__
-		#define __I2C_Addr_MAX17055__			(uint8_t)0x36
-	#endif
+	// Load Configuration
+	#include <Config.h>
 
 	// Define MAX17055 Class
 	class MAX17055 : private I2C_Functions {
 
+		// Private Context
 		private:
 
 			// Set battery empty voltage function.
@@ -238,8 +227,11 @@
 				// Read Current Register
 				I2C_Functions::Read_Multiple_Register(0x03, MAX17055_Current_Data, 2, true);
 
+				// Scale Value
+				uint8_t _MinSOC = (_Minimum_SOC / 100) * 255;
+
 				// Set Voltage Value
-				MAX17055_Current_Data[0] = _Minimum_SOC;
+				MAX17055_Current_Data[0] = _MinSOC;
 
 				// Set Register
 				bool _Result = I2C_Functions::Write_Multiple_Register(0x03, MAX17055_Current_Data, 2);
@@ -258,8 +250,11 @@
 				// Read Current Register
 				I2C_Functions::Read_Multiple_Register(0x03, MAX17055_Current_Data, 2, true);
 
+				// Scale Value
+				uint8_t _MaxSOC = (_Maximum_SOC / 100) * 255;
+
 				// Set Voltage Value
-				MAX17055_Current_Data[1] = _Maximum_SOC;
+				MAX17055_Current_Data[1] = _MaxSOC;
 
 				// Set Register
 				bool _Result = I2C_Functions::Write_Multiple_Register(0x03, MAX17055_Current_Data, 2);
@@ -420,28 +415,50 @@
 			}
 
 			// Set Config function.
-			bool Set_Config(const uint8_t _Channel, const uint16_t _Config) {
+			void Config(void) {
 
 				// Declare Default Data Array
-				uint8_t _Data[2];
+				uint8_t _Config1[2];
+				uint8_t _Config2[2];
 
-				// Declare Result Variable
-				bool _Result;
+				// Set Default Data
+				_Config1[0] = 0b00000000;
+				_Config1[1] = 0b00000000;
+				_Config2[0] = 0b00011000;
+				_Config2[1] = 0b00000100;
 
-				// Set Data Low/High Byte
-				_Data[0] = ((_Config & (uint16_t)0x00FF));
-				_Data[1] = ((_Config & (uint16_t)0xFF00) >> 8);
+				// Set Configuration bits [Config1]
+				if (MAX17055_Ber) bitSet(_Config1[0], 0);
+				if (MAX17055_Bei) bitSet(_Config1[0], 1);
+				if (MAX17055_Aen) bitSet(_Config1[0], 2);
+				if (MAX17055_FTHRM) bitSet(_Config1[0], 3);
+				if (MAX17055_ETHRM) bitSet(_Config1[0], 4);
+				if (MAX17055_COMMSH) bitSet(_Config1[0], 6);
+				if (MAX17055_SHDN) bitSet(_Config1[0], 7);
+				if (MAX17055_Tex) bitSet(_Config1[1], 0);
+				if (MAX17055_Ten) bitSet(_Config1[1], 1);
+				if (MAX17055_AINSH) bitSet(_Config1[1], 2);
+				if (MAX17055_IS) bitSet(_Config1[1], 3);
+				if (MAX17055_VS) bitSet(_Config1[1], 4);
+				if (MAX17055_TS) bitSet(_Config1[1], 5);
+				if (MAX17055_SS) bitSet(_Config1[1], 6);
+				if (MAX17055_TSel) bitSet(_Config1[1], 7);
+				
+				// Set Configuration bits [Config2]
+				if (MAX17055_CPMode) bitSet(_Config2[0], 1);
+				if (MAX17055_LDMDL) bitSet(_Config2[0], 5);
+				if (MAX17055_TAIrtEN) bitSet(_Config2[0], 6);
+				if (MAX17055_dSOCen) bitSet(_Config2[0], 7);
+				if (MAX17055_DPEn) bitSet(_Config2[1], 4);
+				if (MAX17055_AtRateEn) bitSet(_Config2[1], 5);
 
 				// Config1 Setting
-				if (_Channel == 1) _Result = I2C_Functions::Write_Multiple_Register(0x1D, _Data, 2);
-				if (_Channel == 2) _Result = I2C_Functions::Write_Multiple_Register(0xBB, _Data, 2);
-
-				// End Function
-				return(_Result);
+				I2C_Functions::Write_Multiple_Register(0x1D, _Config1, 2);
+				I2C_Functions::Write_Multiple_Register(0xBB, _Config2, 2);
 
 			}
 
-		// Public Variables
+		// Public Context
 		public:
 
 			// Declare Global Variable
@@ -476,8 +493,7 @@
 				if (I2C_Functions::Variables.Device.Detect) {
 
 					// Set Configuration
-					this->Set_Config(1, 0x0000);
-					this->Set_Config(2, 0x0218);
+					this->Config();
 					this->Set_HibCFG(0x0000);
 
 					// Design Capacity Register
@@ -950,6 +966,13 @@
 				return(Value);
 
 			}
+
+
+
+
+
+
+
 
 	};
 
