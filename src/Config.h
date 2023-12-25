@@ -11,6 +11,45 @@
 	#define _MAX17055_Resistor_				0.01	// Shunt Resistor
 #endif
 
+// Define Minimum Voltage
+#ifndef _MAX17055_Min_Voltage_
+	#define _MAX17055_Min_Voltage_			3.8		// Minimum Voltage
+#endif
+
+// Define Maximum Voltage
+#ifndef _MAX17055_Max_Voltage_
+	#define _MAX17055_Max_Voltage_			4.3		// Maximum Voltage
+#endif
+
+// Define Maximum Current
+#ifndef _MAX17055_Max_Current_
+	#define _MAX17055_Max_Current_			1.5		// Maximum Current
+#endif
+
+// Define Minimum Temperature
+#ifndef _MAX17055_Min_Temperature_
+	#define _MAX17055_Min_Temperature_		-20		// Minimum Temperature
+#endif
+
+// Define Maximum Temperature
+#ifndef _MAX17055_Max_Temperature_
+	#define _MAX17055_Max_Temperature_		60		// Maximum Temperature
+#endif
+
+// Define Limits
+//----------------------------------------------
+
+// Define Minimum SOC
+#ifndef _MAX17055_Min_SOC_
+	#define _MAX17055_Min_SOC_				20		// Minimum SOC
+#endif
+
+// Define Maximum SOC
+#ifndef _MAX17055_Max_SOC_
+	#define _MAX17055_Max_SOC_				90		// Maximum SOC
+#endif
+
+
 // Config1 (0x1D) Configuration
 //----------------------------------------------
 
@@ -32,7 +71,7 @@
 // Tmn, Vmx, Vmn, Imx, and Imn bits of the Status register
 // (00h) are not disabled.
 #ifndef MAX17055_Aen
-	#define MAX17055_Aen		0
+	#define MAX17055_Aen		1
 #endif
 
 // This allows the host to control the bias of the thermistor switch or
@@ -68,7 +107,7 @@
 
 // Set to 1 and set ETHRM or FTHRM to 1 to enable temperature measurements selected by Config.TSel.
 #ifndef MAX17055_Ten
-	#define MAX17055_Ten		0
+	#define MAX17055_Ten		1
 #endif
 
 // Set to 1 to enable device shutdown when the IC is mounted host side and the battery is removed. 
@@ -124,7 +163,7 @@
 // Set this bit to 1 to enable temperature based alerts. 
 // Write this bit to 0 to disable temperature alerts. This bit is set to 1 at power-up.
 #ifndef MAX17055_TAIrtEN
-	#define MAX17055_TAIrtEN	0
+	#define MAX17055_TAIrtEN	1
 #endif
 
 // Set this bit to 1 to enable alert output with the Status.dSOCi bit function.

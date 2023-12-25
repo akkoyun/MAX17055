@@ -425,7 +425,7 @@
 				_Config1[0] = 0b00000000;
 				_Config1[1] = 0b00000000;
 				_Config2[0] = 0b00011000;
-				_Config2[1] = 0b00000100;
+				_Config2[1] = 0b00000110;
 
 				// Set Configuration bits [Config1]
 				if (MAX17055_Ber) bitSet(_Config1[0], 0);
@@ -497,40 +497,43 @@
 					this->Set_HibCFG(0x0000);
 
 					// Design Capacity Register
-					this->Set_Design_Capacity(2000);
+					this->Set_Design_Capacity(_MAX17055_Design_Capacity_);
 
 					// ModelCfg Register
 					this->Set_ModelCfg(2);
 
 					// IChgTerm Register
-					this->Set_Charge_Termination_Current(0.250);
+					this->Set_Charge_Termination_Current(0.100);
 
 					// VEmpty Register
 					this->Set_Empty_Voltage(3.000);
 
 					// VRecovery Register
-					this->Set_Recovery_Voltage(3.880);
+					this->Set_Recovery_Voltage(3.500);
 
 					// Set Minimum Voltage
-					this->Set_Min_Voltage(3.800);
+					this->Set_Min_Voltage(_MAX17055_Min_Voltage_);
 
 					// Set Maximum Voltage
-					this->Set_Max_Voltage(4.200);
+					this->Set_Max_Voltage(_MAX17055_Max_Voltage_);
 
 					// Set Maximum Current
-					this->Set_Max_Current(2.000);
+					this->Set_Max_Current(_MAX17055_Max_Current_);
 
 					// Set Minimum SOC
-					this->Set_Min_SOC(20);
+					this->Set_Min_SOC(_MAX17055_Min_SOC_);
 
 					// Set Maximum SOC
-					this->Set_Max_SOC(90);
+					this->Set_Max_SOC(_MAX17055_Max_SOC_);
 
 					// Set Minimum Temperature
-					this->Set_Min_Temperature(10);
+					this->Set_Min_Temperature(_MAX17055_Min_Temperature_);
 
 					// Set Maximum Temperature
-					this->Set_Max_Temperature(50);
+					this->Set_Max_Temperature(_MAX17055_Max_Temperature_);
+
+					// Clear Bits
+					this->Status_Clear();
 
 					// I2C Delay
 					delay(5);
@@ -923,24 +926,52 @@
 				// Read Status Register
 				I2C_Functions::Read_Multiple_Register(0x00, _Status_Register, 2, false);
 
-				// Set Value
+				// Read POR
 				this->Status.Power_on_Reset = bitRead(_Status_Register[0], 1);
+
+				// Read Imn
 				this->Status.Current_Min = bitRead(_Status_Register[0], 2);
+				
+				// Read Bst
 				this->Status.Battery_Status = bitRead(_Status_Register[0], 3);
+				
+				// Read Imx
 				this->Status.Current_Max = bitRead(_Status_Register[0], 6);
+				
+				// Read SOC_Change
 				this->Status.SOC_Change = bitRead(_Status_Register[0], 7);
+
+				// Read Vmn
 				this->Status.Voltage_Min = bitRead(_Status_Register[1], 0);
+
+				// Read Tmn
 				this->Status.Temperature_Min = bitRead(_Status_Register[1], 1);
+				
+				// Read Smn
 				this->Status.SOC_Min = bitRead(_Status_Register[1], 2);
+				
+				// Read Bi
 				this->Status.Battery_Insertion = bitRead(_Status_Register[1], 3);
+				
+				// Read Vmx
 				this->Status.Voltage_Max = bitRead(_Status_Register[1], 4);
+				
+				// Read Tmx
 				this->Status.Temperature_Max = bitRead(_Status_Register[1], 5);
+				
+				// Read Smx
 				this->Status.SOC_Max = bitRead(_Status_Register[1], 6);
+				
+				// Read Br
 				this->Status.Battery_Removal = bitRead(_Status_Register[1], 7);
 
-				// Clear Bits
-				_Status_Register[0] = 0x00;
-				_Status_Register[1] = 0x00;
+			}
+
+			// Clear battery status function.
+			void Status_Clear(void) {
+
+				// Define Data Variable
+				uint8_t _Status_Register[2] = {0x00, 0x00};
 
 				// Write Status Register
 				I2C_Functions::Write_Multiple_Register(0x00, _Status_Register, 2);
@@ -966,13 +997,6 @@
 				return(Value);
 
 			}
-
-
-
-
-
-
-
 
 	};
 
