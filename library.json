@@ -1,6 +1,6 @@
 {
 	"name": "MAX17055",
-	"version": "2.3.1",
+	"version": "2.3.2",
 	"keywords": "Battery, Gauge, MAX17055, Voltage, Current, Age, Cycle, BMS, SOC, Fuel, Capacity, mAh",
 	"description": "The MAX17055 is a low-power fuel-gauge IC that implements the Maxim ModelGauge m5 EZ algorithm. It measures battery voltage, current and temperature to produce fuel gauge results. Its typical power consumption is 7μA.",
 	"authors":

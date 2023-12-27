@@ -20,7 +20,7 @@
 	#endif
 
 	// Load Configuration
-	#include <Config.h>
+	#include "Config.h"
 
 	// Define MAX17055 Class
 	class MAX17055 : private I2C_Functions {
