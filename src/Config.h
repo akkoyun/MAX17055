@@ -2,51 +2,51 @@
 //----------------------------------------------
 
 // Define Battery Capacity
-#ifndef _MAX17055_Design_Capacity_
-	#define _MAX17055_Design_Capacity_		2000	// Battery Capacity
+#ifndef __MAX17055_Design_Capacity__
+	#define __MAX17055_Design_Capacity__	2000	// Battery Capacity
 #endif
 
 // Define Gauge Resistor
-#ifndef _MAX17055_Resistor_
-	#define _MAX17055_Resistor_				0.01	// Shunt Resistor
+#ifndef __MAX17055_Resistor__
+	#define __MAX17055_Resistor__			0.01	// Shunt Resistor
 #endif
 
 // Define Minimum Voltage
-#ifndef _MAX17055_Min_Voltage_
-	#define _MAX17055_Min_Voltage_			3.8		// Minimum Voltage
+#ifndef __MAX17055_Min_Voltage__
+	#define __MAX17055_Min_Voltage__		3.8		// Minimum Voltage
 #endif
 
 // Define Maximum Voltage
-#ifndef _MAX17055_Max_Voltage_
-	#define _MAX17055_Max_Voltage_			4.3		// Maximum Voltage
+#ifndef __MAX17055_Max_Voltage__
+	#define __MAX17055_Max_Voltage__		4.3		// Maximum Voltage
 #endif
 
 // Define Maximum Current
-#ifndef _MAX17055_Max_Current_
-	#define _MAX17055_Max_Current_			1.5		// Maximum Current
+#ifndef __MAX17055_Max_Current__
+	#define __MAX17055_Max_Current__		1.5		// Maximum Current
 #endif
 
 // Define Minimum Temperature
-#ifndef _MAX17055_Min_Temperature_
-	#define _MAX17055_Min_Temperature_		-20		// Minimum Temperature
+#ifndef __MAX17055_Min_Temperature__
+	#define __MAX17055_Min_Temperature__	-20		// Minimum Temperature
 #endif
 
 // Define Maximum Temperature
-#ifndef _MAX17055_Max_Temperature_
-	#define _MAX17055_Max_Temperature_		60		// Maximum Temperature
+#ifndef __MAX17055_Max_Temperature__
+	#define __MAX17055_Max_Temperature__	60		// Maximum Temperature
 #endif
 
 // Define Limits
 //----------------------------------------------
 
 // Define Minimum SOC
-#ifndef _MAX17055_Min_SOC_
-	#define _MAX17055_Min_SOC_				20		// Minimum SOC
+#ifndef __MAX17055_Min_SOC__
+	#define __MAX17055_Min_SOC__			20		// Minimum SOC
 #endif
 
 // Define Maximum SOC
-#ifndef _MAX17055_Max_SOC_
-	#define _MAX17055_Max_SOC_				90		// Maximum SOC
+#ifndef __MAX17055_Max_SOC__
+	#define __MAX17055_Max_SOC__			90		// Maximum SOC
 #endif
 
 

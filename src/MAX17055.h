@@ -180,7 +180,7 @@
 			bool Set_Charge_Termination_Current(float _Charge_Termination_Current) {
 
 				// Handle Raw Data
-				uint16_t _RAW_Data = (uint16_t)(_Charge_Termination_Current * 1000000 * _MAX17055_Resistor_ / 1.5625);
+				uint16_t _RAW_Data = (uint16_t)(_Charge_Termination_Current * 1000000 * __MAX17055_Resistor__ / 1.5625);
 
 				// Declare Default Data Array
 				uint8_t _Data[2];
@@ -497,7 +497,7 @@
 					this->Set_HibCFG(0x0000);
 
 					// Design Capacity Register
-					this->Set_Design_Capacity(_MAX17055_Design_Capacity_);
+					this->Set_Design_Capacity(__MAX17055_Design_Capacity__);
 
 					// ModelCfg Register
 					this->Set_ModelCfg(2);
@@ -512,25 +512,25 @@
 					this->Set_Recovery_Voltage(3.500);
 
 					// Set Minimum Voltage
-					this->Set_Min_Voltage(_MAX17055_Min_Voltage_);
+					this->Set_Min_Voltage(__MAX17055_Min_Voltage__);
 
 					// Set Maximum Voltage
-					this->Set_Max_Voltage(_MAX17055_Max_Voltage_);
+					this->Set_Max_Voltage(__MAX17055_Max_Voltage__);
 
 					// Set Maximum Current
-					this->Set_Max_Current(_MAX17055_Max_Current_);
+					this->Set_Max_Current(__MAX17055_Max_Current__);
 
 					// Set Minimum SOC
-					this->Set_Min_SOC(_MAX17055_Min_SOC_);
+					this->Set_Min_SOC(__MAX17055_Min_SOC__);
 
 					// Set Maximum SOC
-					this->Set_Max_SOC(_MAX17055_Max_SOC_);
+					this->Set_Max_SOC(__MAX17055_Max_SOC__);
 
 					// Set Minimum Temperature
-					this->Set_Min_Temperature(_MAX17055_Min_Temperature_);
+					this->Set_Min_Temperature(__MAX17055_Min_Temperature__);
 
 					// Set Maximum Temperature
-					this->Set_Max_Temperature(_MAX17055_Max_Temperature_);
+					this->Set_Max_Temperature(__MAX17055_Max_Temperature__);
 
 					// Clear Bits
 					this->Status_Clear();
@@ -659,7 +659,7 @@
 				} 
 
 				// Calculate Data
-				float _Value = (((double)_Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
+				float _Value = (((double)_Measurement_Raw * 1.5625) / __MAX17055_Resistor__) / 1000;
 				
 				// Assign Signiture
 				if (_Signiture) _Value *= -1;
@@ -696,7 +696,7 @@
 				} 
 
 				// Calculate Data
-				float _Value = (((double)_Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
+				float _Value = (((double)_Measurement_Raw * 1.5625) / __MAX17055_Resistor__) / 1000;
 				
 				// Assign Signiture
 				if (_Signiture) _Value *= -1;
@@ -759,7 +759,7 @@
 				uint16_t _Measurement_Raw = ((uint16_t)_MAX17055_Data[1] << 8) | (uint16_t)_MAX17055_Data[0];
 
 				// Calculate Data
-				uint16_t _Value = _Measurement_Raw * 5 / 1000 / _MAX17055_Resistor_;
+				uint16_t _Value = _Measurement_Raw * 5 / 1000 / __MAX17055_Resistor__;
 
 				// End Function
 				return(_Value);
@@ -779,7 +779,7 @@
 				uint16_t _Measurement_Raw = ((uint16_t)_MAX17055_Data[1] << 8) | (uint16_t)_MAX17055_Data[0];
 
 				// Calculate Data
-				uint16_t _Value = _Measurement_Raw * 5 / 1000 / _MAX17055_Resistor_;
+				uint16_t _Value = _Measurement_Raw * 5 / 1000 / __MAX17055_Resistor__;
 
 				// End Function
 				return(_Value);
@@ -799,7 +799,7 @@
 				uint16_t _Measurement_Raw = ((uint16_t)_MAX17055_Data[1] << 8) | (uint16_t)_MAX17055_Data[0];
 
 				// Calculate Data
-				uint16_t _Value = _Measurement_Raw * 5 / 1000 / _MAX17055_Resistor_;
+				uint16_t _Value = _Measurement_Raw * 5 / 1000 / __MAX17055_Resistor__;
 
 				// End Function
 				return(_Value);
@@ -991,7 +991,7 @@
 				uint16_t _Measurement_Raw = ((uint16_t)_MAX17055_Data[1] << 8) | (uint16_t)_MAX17055_Data[0];
 
 				// Calculate Data
-				float Value = (((double)_Measurement_Raw * 1.5625) / _MAX17055_Resistor_) / 1000;
+				float Value = (((double)_Measurement_Raw * 1.5625) / __MAX17055_Resistor__) / 1000;
 
 				// End Function
 				return(Value);
