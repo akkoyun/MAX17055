@@ -807,7 +807,7 @@
 			}
 
 			// Get battery temperature function.
-			float Temperature(void) {
+			float IC_Temperature(void) {
 
 				// Define Data Variable
 				uint8_t _MAX17055_Data[2];
