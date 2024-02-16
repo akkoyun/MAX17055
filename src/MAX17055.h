@@ -436,16 +436,16 @@
 					this->Set_Design_Capacity(__MAX17055_Design_Capacity__);
 
 					// ModelCfg Register
-					this->Set_ModelCfg(2);
+					this->Set_ModelCfg(__MAX17055_Battery_Model__);
 
 					// IChgTerm Register
-					this->Set_Charge_Termination_Current(0.100);
+					this->Set_Charge_Termination_Current(__MAX17055_Termination_Current__);
 
 					// VEmpty Register
-					this->Set_Empty_Voltage(3.000);
+					this->Set_Empty_Voltage(__MAX17055_Empty_Voltage__);
 
 					// VRecovery Register
-					this->Set_Recovery_Voltage(3.500);
+					this->Set_Recovery_Voltage(__MAX17055_Recovery_Voltage__);
 
 					// Set Minimum Voltage
 					this->Set_Min_Voltage(__MAX17055_Min_Voltage__);

@@ -21,9 +21,24 @@
 	#define __MAX17055_Max_Voltage__		4.3		// Maximum Voltage
 #endif
 
+// Define Empty Voltage
+#ifndef __MAX17055_Empty_Voltage__
+	#define __MAX17055_Empty_Voltage__		3.0		// Empty Voltage
+#endif
+
+// Define Recovery Voltage
+#ifndef __MAX17055_Recovery_Voltage__
+	#define __MAX17055_Recovery_Voltage__	3.5		// Recovery Voltage
+#endif
+
 // Define Maximum Current
 #ifndef __MAX17055_Max_Current__
 	#define __MAX17055_Max_Current__		1.5		// Maximum Current
+#endif
+
+// Define Termination Current
+#ifndef __MAX17055_Termination_Current__
+	#define __MAX17055_Termination_Current__	0.1	// Termination Current
 #endif
 
 // Define Minimum Temperature
@@ -34,6 +49,11 @@
 // Define Maximum Temperature
 #ifndef __MAX17055_Max_Temperature__
 	#define __MAX17055_Max_Temperature__	60		// Maximum Temperature
+#endif
+
+// Define Battery Model
+#ifndef __MAX17055_Battery_Model__
+	#define __MAX17055_Battery_Model__		2		// Battery Model
 #endif
 
 // Define Limits
