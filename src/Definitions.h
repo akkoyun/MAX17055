@@ -1,0 +1,13 @@
+#define MAX17055_POR			0
+#define MAX17055_IMin			1
+#define MAX17055_IMax			2
+#define MAX17055_VMin			3
+#define MAX17055_VMax			4
+#define MAX17055_TMin			5
+#define MAX17055_TMax			6
+#define MAX17055_SOC_Min		7
+#define MAX17055_SOC_Max		8
+#define MAX17055_SOC_Change		9
+#define MAX17055_Bat_Status		10
+#define MAX17055_Bat_Insert		11
+#define MAX17055_Bat_Remove		12

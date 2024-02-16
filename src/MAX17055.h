@@ -21,6 +21,7 @@
 
 	// Load Configuration
 	#include "Config.h"
+	#include "Definitions.h"
 
 	// Define MAX17055 Class
 	class MAX17055 : private I2C_Functions {
@@ -412,23 +413,6 @@
 
 		// Public Context
 		public:
-
-			// Declare Global Variable
-			struct Status_Struct {
-				bool Power_on_Reset = false;
-				bool Voltage_Min = false;
-				bool Voltage_Max = false;
-				bool Current_Min = false;
-				bool Current_Max = false;
-				bool Temperature_Min = false;
-				bool Temperature_Max = false;
-				bool SOC_Min = false;
-				bool SOC_Max = false;
-				bool Battery_Status = false;
-				bool SOC_Change = false;
-				bool Battery_Insertion = false;
-				bool Battery_Removal = false;
-			} Status;
 
 			// Library Constructor
 			explicit MAX17055(const bool _Multiplexer_Enable = false, const uint8_t _Multiplexer_Channel = 0) : I2C_Functions(__I2C_Addr_MAX17055__, _Multiplexer_Enable, _Multiplexer_Channel) {
@@ -870,7 +854,7 @@
 			}
 
 			// Get battery status function.
-			void Status_Control(void) {
+			bool Status_Control(const uint8_t _Status) {
 
 				// Define Data Variable
 				uint8_t _Status_Register[2] = {0x00, 0x00};
@@ -878,44 +862,23 @@
 				// Read Status Register
 				I2C_Functions::Read_Multiple_Register(0x00, _Status_Register, 2, false);
 
-				// Read POR
-				this->Status.Power_on_Reset = bitRead(_Status_Register[0], 1);
+				// Control for Status
+				if (_Status == MAX17055_POR) return(bitRead(_Status_Register[0], 1));
+				else if (_Status == MAX17055_IMin) return(bitRead(_Status_Register[0], 2));
+				else if (_Status == MAX17055_IMax) return(bitRead(_Status_Register[0], 6));
+				else if (_Status == MAX17055_VMin) return(bitRead(_Status_Register[1], 0));
+				else if (_Status == MAX17055_VMax) return(bitRead(_Status_Register[1], 4));
+				else if (_Status == MAX17055_TMin) return(bitRead(_Status_Register[1], 1));
+				else if (_Status == MAX17055_TMax) return(bitRead(_Status_Register[1], 5));
+				else if (_Status == MAX17055_SOC_Min) return(bitRead(_Status_Register[1], 2));
+				else if (_Status == MAX17055_SOC_Max) return(bitRead(_Status_Register[1], 6));
+				else if (_Status == MAX17055_SOC_Change) return(bitRead(_Status_Register[0], 7));
+				else if (_Status == MAX17055_Bat_Status) return(bitRead(_Status_Register[0], 3));
+				else if (_Status == MAX17055_Bat_Insert) return(bitRead(_Status_Register[1], 3));
+				else if (_Status == MAX17055_Bat_Remove) return(bitRead(_Status_Register[1], 7));
 
-				// Read Imn
-				this->Status.Current_Min = bitRead(_Status_Register[0], 2);
-				
-				// Read Bst
-				this->Status.Battery_Status = bitRead(_Status_Register[0], 3);
-				
-				// Read Imx
-				this->Status.Current_Max = bitRead(_Status_Register[0], 6);
-				
-				// Read SOC_Change
-				this->Status.SOC_Change = bitRead(_Status_Register[0], 7);
-
-				// Read Vmn
-				this->Status.Voltage_Min = bitRead(_Status_Register[1], 0);
-
-				// Read Tmn
-				this->Status.Temperature_Min = bitRead(_Status_Register[1], 1);
-				
-				// Read Smn
-				this->Status.SOC_Min = bitRead(_Status_Register[1], 2);
-				
-				// Read Bi
-				this->Status.Battery_Insertion = bitRead(_Status_Register[1], 3);
-				
-				// Read Vmx
-				this->Status.Voltage_Max = bitRead(_Status_Register[1], 4);
-				
-				// Read Tmx
-				this->Status.Temperature_Max = bitRead(_Status_Register[1], 5);
-				
-				// Read Smx
-				this->Status.SOC_Max = bitRead(_Status_Register[1], 6);
-				
-				// Read Br
-				this->Status.Battery_Removal = bitRead(_Status_Register[1], 7);
+				// End Function
+				return(false);
 
 			}
 
