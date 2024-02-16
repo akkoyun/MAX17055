@@ -9,12 +9,12 @@
 #ifndef __MAX17055__
 #define __MAX17055__
 
-	// Define Arduino Library
-	#ifndef __Arduino__
+	// Include Arduino Library
+	#ifndef Arduino_h
 		#include <Arduino.h>
 	#endif
 
-	// Define I2C Functions Library
+	// Include I2C Functions Library
 	#ifndef __I2C_Functions__
 		#include <I2C_Functions.h>
 	#endif
@@ -304,54 +304,6 @@
 
 			}
 
-			// Set dQAcc function.
-			bool Set_dQAcc(const uint16_t _Capacity) {
-
-				// Declare Default Data Array
-				uint8_t _Data[2];
-
-				// Set Data Low/High Byte
-				_Data[0] = (((_Capacity / 32) & (uint16_t)0x00FF));
-				_Data[1] = (((_Capacity / 32) & (uint16_t)0xFF00) >> 8);
-
-				// Set Register
-				bool _Result = I2C_Functions::Write_Multiple_Register(0x45, _Data, 2);
-
-				// End Function
-				return(_Result);
-
-			}
-
-			// Set dPAcc function.
-			bool Set_dPAcc(const uint16_t _Capacity) {
-
-				// Declare dQAcc Variable
-				uint8_t _dQAcc[2];
-
-				// Get dQAcc Register
-				I2C_Functions::Read_Multiple_Register(0x45, _dQAcc, 2, false);
-
-				// Combine Read Bytes
-				uint16_t dQAcc = ((uint16_t)_dQAcc[1] << 8) | (uint16_t)_dQAcc[0];
-
-				// Handle dPAcc Variable
-				uint16_t dPAcc = dQAcc * 51200 / _Capacity;
-
-				// Declare Default Data Array
-				uint8_t _Data[2];
-
-				// Set Data Low/High Byte
-				_Data[0] = ((dPAcc & (uint16_t)0x00FF));
-				_Data[1] = ((dPAcc & (uint16_t)0xFF00) >> 8);
-
-				// Set Register
-				bool _Result = I2C_Functions::Write_Multiple_Register(0x46, _Data, 2);
-
-				// End Function
-				return(_Result);
-
-			}
-
 			// Set battery model function.
 			bool Set_ModelCfg(const uint8_t _Model_ID) {
 
@@ -479,7 +431,7 @@
 			} Status;
 
 			// Library Constructor
-			MAX17055(const bool _Multiplexer_Enable = false, const uint8_t _Multiplexer_Channel = 0) : I2C_Functions(__I2C_Addr_MAX17055__, _Multiplexer_Enable, _Multiplexer_Channel) {
+			explicit MAX17055(const bool _Multiplexer_Enable = false, const uint8_t _Multiplexer_Channel = 0) : I2C_Functions(__I2C_Addr_MAX17055__, _Multiplexer_Enable, _Multiplexer_Channel) {
 				
 			}
 
@@ -971,7 +923,7 @@
 			void Status_Clear(void) {
 
 				// Define Data Variable
-				uint8_t _Status_Register[2] = {0x00, 0x00};
+				const uint8_t _Status_Register[2] = {0x00, 0x00};
 
 				// Write Status Register
 				I2C_Functions::Write_Multiple_Register(0x00, _Status_Register, 2);
