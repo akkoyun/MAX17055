@@ -1,73 +1,141 @@
-// Design Parameters
-//----------------------------------------------
+// =====================================================================
+// Backward Compatibility: Define Macros (DEPRECATED - use namespaces)
+// =====================================================================
 
-// Define Battery Capacity
 #ifndef __MAX17055_Design_Capacity__
-	#define __MAX17055_Design_Capacity__	2000	// Battery Capacity
+	#define __MAX17055_Design_Capacity__	2000	// mAh
 #endif
 
-// Define Gauge Resistor
 #ifndef __MAX17055_Resistor__
-	#define __MAX17055_Resistor__			0.01	// Shunt Resistor
+	#define __MAX17055_Resistor__			0.01	// Ohms
 #endif
 
-// Define Minimum Voltage
 #ifndef __MAX17055_Min_Voltage__
-	#define __MAX17055_Min_Voltage__		3.8		// Minimum Voltage
+	#define __MAX17055_Min_Voltage__		3.8		// V
 #endif
 
-// Define Maximum Voltage
 #ifndef __MAX17055_Max_Voltage__
-	#define __MAX17055_Max_Voltage__		4.3		// Maximum Voltage
+	#define __MAX17055_Max_Voltage__		4.3		// V
 #endif
 
-// Define Empty Voltage
 #ifndef __MAX17055_Empty_Voltage__
-	#define __MAX17055_Empty_Voltage__		3.0		// Empty Voltage
+	#define __MAX17055_Empty_Voltage__		3.0		// V
 #endif
 
-// Define Recovery Voltage
 #ifndef __MAX17055_Recovery_Voltage__
-	#define __MAX17055_Recovery_Voltage__	3.5		// Recovery Voltage
+	#define __MAX17055_Recovery_Voltage__	3.5		// V
 #endif
 
-// Define Maximum Current
 #ifndef __MAX17055_Max_Current__
-	#define __MAX17055_Max_Current__		1.5		// Maximum Current
+	#define __MAX17055_Max_Current__		1.5		// A
 #endif
 
-// Define Termination Current
 #ifndef __MAX17055_Termination_Current__
-	#define __MAX17055_Termination_Current__	0.1	// Termination Current
+	#define __MAX17055_Termination_Current__	0.1	// A
 #endif
 
-// Define Minimum Temperature
 #ifndef __MAX17055_Min_Temperature__
-	#define __MAX17055_Min_Temperature__	-20		// Minimum Temperature
+	#define __MAX17055_Min_Temperature__	-20		// C
 #endif
 
-// Define Maximum Temperature
 #ifndef __MAX17055_Max_Temperature__
-	#define __MAX17055_Max_Temperature__	60		// Maximum Temperature
+	#define __MAX17055_Max_Temperature__	60		// C
 #endif
 
-// Define Battery Model
 #ifndef __MAX17055_Battery_Model__
-	#define __MAX17055_Battery_Model__		2		// Battery Model
+	#define __MAX17055_Battery_Model__		2		// Model ID
 #endif
 
-// Define Limits
-//----------------------------------------------
-
-// Define Minimum SOC
 #ifndef __MAX17055_Min_SOC__
-	#define __MAX17055_Min_SOC__			20		// Minimum SOC
+	#define __MAX17055_Min_SOC__			20		// %
 #endif
 
-// Define Maximum SOC
 #ifndef __MAX17055_Max_SOC__
-	#define __MAX17055_Max_SOC__			90		// Maximum SOC
+	#define __MAX17055_Max_SOC__			90		// %
 #endif
+
+// =====================================================================
+// Register Map & Configuration
+// =====================================================================
+
+namespace MAX17055_Registers {
+	// Status Register
+	constexpr uint8_t STATUS			= 0x00;
+	constexpr uint8_t VALRTTH			= 0x01;
+	constexpr uint8_t TALRTTH			= 0x02;
+	constexpr uint8_t SALRTTH			= 0x03;
+	
+	// Measurement Registers
+	constexpr uint8_t VCELL				= 0x09;
+	constexpr uint8_t AVGVCELL			= 0x19;
+	constexpr uint8_t CURRENT			= 0x0A;
+	constexpr uint8_t AVGCURRENT		= 0x0B;
+	constexpr uint8_t TEMPERATURE		= 0x08;
+	
+	// Capacity Registers
+	constexpr uint8_t DESIGNCAP			= 0x18;
+	constexpr uint8_t REMCAP_REP		= 0x05;
+	constexpr uint8_t FULLCAP_REP		= 0x35;
+	
+	// State of Charge
+	constexpr uint8_t REPCAP			= 0x05;
+	constexpr uint8_t REPSOC			= 0x06;
+	constexpr uint8_t AVGSOC			= 0x0E;
+	
+	// Time Estimates
+	constexpr uint8_t TTE				= 0x11;
+	constexpr uint8_t TTF				= 0x20;
+	
+	// Battery Age & Cycles
+	constexpr uint8_t AGE				= 0x07;
+	constexpr uint8_t CYCLES			= 0x17;
+	
+	// Voltage Configuration
+	constexpr uint8_t VEMPTY			= 0x3A;
+	
+	// Current & Charge Config
+	constexpr uint8_t ICHGTERM			= 0x1E;
+	
+	// Model Configuration
+	constexpr uint8_t MODELCFG			= 0xDB;
+	constexpr uint8_t CONFIG			= 0x1D;
+	constexpr uint8_t CONFIG2			= 0xBB;
+	constexpr uint8_t HIBCFG			= 0xBA;
+	
+	// I2C Address
+	constexpr uint8_t I2C_ADDRESS		= 0x36;
+}
+
+// =====================================================================
+// Design Parameters
+// =====================================================================
+
+namespace MAX17055_Config {
+	// Battery Capacity
+	constexpr uint16_t DESIGN_CAPACITY		= __MAX17055_Design_Capacity__;
+	constexpr float    RESISTOR				= __MAX17055_Resistor__;
+	
+	// Voltage Thresholds
+	constexpr float    MIN_VOLTAGE			= __MAX17055_Min_Voltage__;
+	constexpr float    MAX_VOLTAGE			= __MAX17055_Max_Voltage__;
+	constexpr float    EMPTY_VOLTAGE		= __MAX17055_Empty_Voltage__;
+	constexpr float    RECOVERY_VOLTAGE		= __MAX17055_Recovery_Voltage__;
+	
+	// Current Limits
+	constexpr float    MAX_CURRENT			= __MAX17055_Max_Current__;
+	constexpr float    TERMINATION_CURRENT	= __MAX17055_Termination_Current__;
+	
+	// Temperature Thresholds
+	constexpr int8_t   MIN_TEMPERATURE		= __MAX17055_Min_Temperature__;
+	constexpr int8_t   MAX_TEMPERATURE		= __MAX17055_Max_Temperature__;
+	
+	// Battery Model
+	constexpr uint8_t  BATTERY_MODEL		= __MAX17055_Battery_Model__;
+	
+	// SOC Limits
+	constexpr uint8_t  MIN_SOC				= __MAX17055_Min_SOC__;
+	constexpr uint8_t  MAX_SOC				= __MAX17055_Max_SOC__;
+}
 
 
 // Config1 (0x1D) Configuration
